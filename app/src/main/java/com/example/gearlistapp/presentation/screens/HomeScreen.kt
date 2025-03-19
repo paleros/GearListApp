@@ -10,11 +10,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
+/**
+ * A főképernyőt, azaz az aktualis felszereleslistakat reprezentáló komponens.
+ * @param navController a navigációs controller
+ */
 @Composable
 fun HomeScreen(navController: NavController) {
     Text("This is Gear List Home Screen")
 }
 
+/**
+ * Preview fuggveny a HomeScreen-hoz.
+ */
 @Preview(showBackground = true)
 @Composable
 fun PreviewGearListsHomeScreen() {

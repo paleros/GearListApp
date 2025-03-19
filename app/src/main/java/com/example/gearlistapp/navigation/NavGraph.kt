@@ -16,23 +16,20 @@ import com.example.gearlistapp.presentation.screens.TemplatesHomeScreen
 import com.example.gearlistapp.ui.common.BottomNavigationBar
 import com.example.gearlistapp.ui.common.TopAppBar
 
+/**
+ * A navigacios grafot reprezentalo komponens.
+ * @param navController a navigacios controller
+ * @param modifier a modifier
+ */
 @Composable
 fun NavGraph(
     navController: NavHostController = rememberNavController(),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-//TODO topappbar még nem jól jelenik meg
     NavHost(navController = navController,
         startDestination = Screen.HomeScreen.route, modifier = modifier) {
         composable(Screen.HomeScreen.route) {HomeScreen(navController) }
         composable(Screen.GearsHomeScreen.route) {GearsHomeScreen(navController) }
         composable(Screen.TemplatesHomeScreen.route) {TemplatesHomeScreen(navController) }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NavGraphPreview() {
-    val navController = rememberNavController()
-    NavGraph(navController = navController)
 }

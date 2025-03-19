@@ -2,6 +2,9 @@ package com.example.gearlistapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+/**
+ * A Color osztaly kiterjesztese, amely az alkalmazas szineit tartalmazza.
+ */
 val White = Color(0xFFFFFFFF)
 
 val AppGreen = Color(0xFF2E7864)

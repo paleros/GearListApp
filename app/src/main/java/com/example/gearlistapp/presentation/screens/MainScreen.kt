@@ -10,6 +10,9 @@ import com.example.gearlistapp.navigation.NavGraph
 import com.example.gearlistapp.ui.common.BottomNavigationBar
 import com.example.gearlistapp.ui.common.TopAppBar
 
+/**
+ * A navigacios savokat reprezentáló komponens.
+ */
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -22,6 +25,9 @@ fun MainScreen() {
     }
 }
 
+/**
+ * Preview fuggveny a MainScreen-hoz.
+ */
 @Preview(showBackground = true)
 @Composable
 fun PreviewMainScreen() {

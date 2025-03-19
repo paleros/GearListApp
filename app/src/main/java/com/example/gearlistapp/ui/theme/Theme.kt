@@ -35,7 +35,9 @@ private val LightColorScheme = lightColorScheme(
     onBackground = AppBlack,
     onSurface = AppBlack
 )
-
+/**
+ * Az alkalmazas szineit es tipografiat beallito komponens.
+ */
 @Composable
 fun GearListAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

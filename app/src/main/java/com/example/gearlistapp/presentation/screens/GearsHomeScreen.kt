@@ -11,12 +11,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 
+/**
+ * A felszerelesek fokepernyojet reprezentalo komponens.
+ * @param navController a navigacios controller
+ */
 @Composable
 fun GearsHomeScreen(navController: NavController) {
 
     Text("This is Gears Home Screen")
 }
 
+/**
+ * Preview fuggveny a GearsHomeScreen-hoz.
+ */
 @Preview(showBackground = true)
 @Composable
 fun PreviewGearsHomeScreen() {

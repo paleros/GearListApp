@@ -9,12 +9,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
-
+/**
+ * A sablonok fokepernyojet reprezentalo komponens.
+ * @param navController a navigacios controller
+ */
 @Composable
 fun TemplatesHomeScreen(navController: NavController) {
     Text("This is Templates Home Screen")
 }
 
+/**
+ * Preview fuggveny a TemplatesHomeScreen-hoz.
+ */
 @Preview(showBackground = true)
 @Composable
 fun PreviewTemplatesHomeScreen() {

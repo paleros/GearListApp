@@ -13,8 +13,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.gearlistapp.R
 import com.example.gearlistapp.navigation.Screen
 
+/**
+ * Az also navigacios savot reprezentalo komponens.
+ * @param navController a navigacios controller
+ */
 @Composable
 fun BottomNavigationBar(navController: NavController) {
+    /** Az ikonokhoz tartozo elemek listaja. */
     val screenItems = listOf(
         Screen.TemplatesHomeScreen,
         Screen.HomeScreen,

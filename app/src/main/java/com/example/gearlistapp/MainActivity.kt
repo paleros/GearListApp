@@ -18,6 +18,7 @@ import com.example.gearlistapp.ui.theme.GearListAppTheme
  * Onallo laboratorium (MSc): Utazast tamogato alkalmazas fejlesztase Android platformra
  *
  * Felhasznalt anyagok: stackoverflow.com, GitHub Copilot, ChatGTP, Gemini, developer.android.com,
+ *                      slack-chats.kotlinlang.org, m2.material.io, fonts.google.com
  *                      Androidalapu szoftverfejlesztes, Mobil es webes szoftverek tantargy anyagai
  *
  * @author Eros Pal
@@ -26,6 +27,9 @@ import com.example.gearlistapp.ui.theme.GearListAppTheme
  * ---------------------------------------------------------------------------------------------------------------------
  */
 
+/**
+ * MainActivity class
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

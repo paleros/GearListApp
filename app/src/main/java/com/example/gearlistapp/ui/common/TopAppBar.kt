@@ -3,12 +3,10 @@ package com.example.gearlistapp.ui.common
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -24,24 +22,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.gearlistapp.navigation.screens
+import com.example.gearlistapp.navigation.homeScreens
 
+/**
+ * A felso app savot reprezentalo komponens.
+ * @param navController a navigacios controller
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(navController: NavController) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
-    val currentScreen = screens.find { it.route == navBackStackEntry.value?.destination?.route } ?: screens.first()
+    val currentScreen = homeScreens.find { it.route == navBackStackEntry.value?.destination?.route } ?: homeScreens.first()
 
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -50,6 +49,7 @@ fun TopAppBar(navController: NavController) {
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
+        /** A cim adatai, ikon es szoveg. */
         title = {
             Row {
                 Image(painter = painterResource(id = currentScreen.iconRes),
@@ -60,6 +60,7 @@ fun TopAppBar(navController: NavController) {
                 Text(text = currentScreen.title)
             }
         },
+        /** A menu ikon. */
         navigationIcon = {
             IconButton(onClick = { menuExpanded = true }) {
                 Icon(Icons.Default.Menu,
@@ -74,6 +75,7 @@ fun TopAppBar(navController: NavController) {
                 DropdownMenuItem(text = { Text("Option 2") }, onClick = { /*TODO menü opció*/ })
             }
         },
+        /** A kereso ikon. */
         actions = {
             IconButton(onClick = { /*TODO keresés */ }) {
                 Icon(Icons.Default.Search,
@@ -82,35 +84,11 @@ fun TopAppBar(navController: NavController) {
             }
         }
     )
-
-    /*TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.onPrimary
-        ),
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Image(
-                    painter = painterResource(currentScreen.iconRes),
-                    contentDescription = "Icon",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
-                    modifier = Modifier.size(40.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = currentScreen.title,
-                    fontSize = 20.sp, modifier = Modifier.weight(1f))
-                IconButton(onClick = { /*TODO beállítások */ }) {
-                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Settings",
-                        tint = MaterialTheme.colorScheme.onPrimary)
-                }
-            }
-        }
-    )*/
 }
 
+/**
+ * Preview fuggveny a TopAppBar-hoz.
+ */
 @Preview
 @Composable
 fun TopAppBarPreview() {
