@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">GearListApp</string>
+    <string name="gearlisthomescreen_title">Gear lists</string>
+    <string name="templatehomescreen_title">Templates</string>
+    <string name="gearshomescreen_title">Gears</string>
 </resources>

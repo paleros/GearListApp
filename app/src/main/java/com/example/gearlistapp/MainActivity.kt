@@ -4,14 +4,27 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.gearlistapp.navigation.NavGraph
+import com.example.gearlistapp.presentation.screens.MainScreen
 import com.example.gearlistapp.ui.theme.GearListAppTheme
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Created by peros on 2025.01.28.
+ *
+ * Budapesti Muszaki es Gazdasagtudomanyi Egyetem (BME)
+ * Villamosmernoki es Informatikai Kar (VIK)
+ * Automatizálási és Alkalmazott Informatikai Tanszék (AUT)
+ * Onallo laboratorium (MSc): Utazast tamogato alkalmazas fejlesztase Android platformra
+ *
+ * Felhasznalt anyagok: stackoverflow.com, GitHub Copilot, ChatGTP, Gemini, developer.android.com,
+ *                      Androidalapu szoftverfejlesztes, Mobil es webes szoftverek tantargy anyagai
+ *
+ * @author Eros Pal
+ * @consulant Gazdi Laszlo
+ * @since 2025.03.19.
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,29 +32,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GearListAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MainScreen()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GearListAppTheme {
-        Greeting("Android")
     }
 }
