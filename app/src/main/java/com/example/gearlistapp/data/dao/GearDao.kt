@@ -1,7 +1,8 @@
 package com.example.gearlistapp.data.dao
 
 import androidx.room.*
-import com.example.gearlistapp.data.model.Gear
+import com.example.gearlistapp.data.entities.GearEntity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * A felszereleshez tartozo adatbazis muveletek.
@@ -14,14 +15,14 @@ interface GearDao {
      * @param gear a beszurando felszereles.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGear(gear: Gear)
+    suspend fun insertGear(gear: GearEntity)
 
     /**
      * Az osszes felszereles lekerdezese az adatbazisbol.
      * @return az osszes felszereles.
      */
     @Query("SELECT * FROM gear_table")
-    suspend fun getAllGear(): List<Gear>
+    fun getAllGears(): Flow<List<GearEntity>>
 
     /**
      * Felszereles lekerdezese az azonosito alapjan.
@@ -29,21 +30,21 @@ interface GearDao {
      * @return a felszereles.
      */
     @Query("SELECT * FROM gear_table WHERE id = :id")
-    suspend fun getGearById(id: Int): Gear
+    fun getGearById(id: Int): Flow<GearEntity>
 
     /**
      * Felszereles frissitese az adatbazisban.
      * @param gear a frissitendo felszereles.
      */
     @Update
-    suspend fun updateGear(gear: Gear)
+    suspend fun updateGear(gear: GearEntity)
 
     /**
      * Felszereles torlese az adatbazisbol.
      * @param gear a torlendo felszereles.
      */
     @Delete
-    suspend fun deleteGear(gear: Gear)
+    suspend fun deleteGear(gear: GearEntity)
 
     /**
      * Felszereles torlese az azonosito alapjan.

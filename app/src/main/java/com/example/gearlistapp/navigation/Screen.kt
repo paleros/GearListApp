@@ -11,11 +11,11 @@ import com.example.gearlistapp.R
  */
 sealed class Screen(val route: String, val title: String, @DrawableRes val iconRes: Int) {
     /** A HomeScreen osztalya (kezdokepernyo, itt jelennek meg az aktualis felszereleslistak).*/
-    object HomeScreen : Screen("home_screen", "Gear lists", R.drawable.baseline_hiking_24)
+    object HomeScreen : Screen("home_screen", R.string.gear_lists.toString(), R.drawable.baseline_hiking_24)
     /** A GearsHomeScreen osztalya (felszerelesek kezdokepernyoje).*/
-    object GearsHomeScreen : Screen("gears_home_screen", "Gears", R.drawable.baseline_beach_access_24)
+    object GearsHomeScreen : Screen("gears_home_screen", R.string.gears.toString(), R.drawable.baseline_beach_access_24)
     /** A TemplatesHomeScreen osztalya (felszereleslista sablonok kezdokepernyoje).*/
-    object TemplatesHomeScreen : Screen("templates_home_screen", "Templates", R.drawable.baseline_all_inbox_24)
+    object TemplatesHomeScreen : Screen("templates_home_screen", R.string.templates.toString(), R.drawable.baseline_all_inbox_24)
 }
 
 /** A home screen-ek listaja, a TopAppBar megjeleniteshez.*/

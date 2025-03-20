@@ -3,4 +3,9 @@
     <string name="gearlisthomescreen_title">Gear lists</string>
     <string name="templatehomescreen_title">Templates</string>
     <string name="gearshomescreen_title">Gears</string>
+    <string name="gears">Gears</string>
+    <string name="templates">Templates</string>
+    <string name="gear_lists">Gear lists</string>
+    <string name="n_a">N/A</string>
+    <string name="filter">Filter</string>
 </resources>

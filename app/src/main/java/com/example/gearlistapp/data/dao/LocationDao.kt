@@ -1,7 +1,8 @@
 package com.example.gearlistapp.data.dao
 
 import androidx.room.*
-import com.example.gearlistapp.data.model.Location
+import com.example.gearlistapp.data.entities.LocationEntity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * A helyszinhez tartozo adatbazis muveletek.
@@ -14,14 +15,14 @@ interface LocationDao {
      * @param location a beszurando helyszin.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLocation(location: Location)
+    suspend fun insertLocation(location: LocationEntity)
 
     /**
      * Az osszes helyszin lekerdezese az adatbazisbol.
      * @return az osszes helyszin.
      */
     @Query("SELECT * FROM location_table")
-    suspend fun getAllLocations(): List<Location>
+    fun getAllLocations(): Flow<List<LocationEntity>>
 
     /**
      * Helyszin lekerdezese az azonosito alapjan.
@@ -29,21 +30,21 @@ interface LocationDao {
      * @return a helyszin.
      */
     @Query("SELECT * FROM location_table WHERE id = :id")
-    suspend fun getLocationById(id: Int): Location
+    fun getLocationById(id: Int): Flow<LocationEntity>
 
     /**
      * Helyszin frissitese az adatbazisban.
      * @param location a frissitendo helyszin.
      */
     @Update
-    suspend fun updateLocation(location: Location)
+    suspend fun updateLocation(location: LocationEntity)
 
     /**
      * Helyszin frissitese az adatbazisban.
      * @param location a frissitendo helyszin.
      */
     @Delete
-    suspend fun deleteLocation(location: Location)
+    suspend fun deleteLocation(location: LocationEntity)
 
     /**
      * Helyszin torlese az azonosito alapjan.

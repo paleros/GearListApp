@@ -1,31 +1,36 @@
 package com.example.gearlistapp
 
 import android.app.Application
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-//import androidx.room.Room
-import com.example.gearlistapp.navigation.Screen
-import com.example.gearlistapp.presentation.screens.HomeScreen
+import androidx.room.Room
+import com.example.gearlistapp.data.database.AppDatabase
+import com.example.gearlistapp.data.repository.CategoryRepositoryImpl
+import com.example.gearlistapp.data.repository.LocationRepositoryImpl
+import com.example.gearlistapp.data.repository.GearRepositoryImpl
 
+/**
+ * Az alkalmazás fo osztalya,
+ * amely az alkalmazas indulasakor hozza letre az adatbazist es a repository-kat.
+ */
 class GearApplication : Application() {
 
-    /*companion object {
-        private lateinit var db: GearDatabase
+    companion object {
+        private lateinit var db: AppDatabase
 
-        lateinit var repository: GearRepositoryImpl
-    }*/
+        lateinit var gearRepository: GearRepositoryImpl
+        lateinit var categoryRepository: CategoryRepositoryImpl
+        lateinit var locationRepository: LocationRepositoryImpl
+    }
 
     override fun onCreate() {
         super.onCreate()
-        /*db = Room.databaseBuilder(
+        db = Room.databaseBuilder(
             applicationContext,
-            GearDatabase::class.java,
-            "gear_database"
+            AppDatabase::class.java,
+            "gearlist_database"
         ).fallbackToDestructiveMigration().build()
 
-        repository = GearRepositoryImpl(db.dao)*/
+        gearRepository = GearRepositoryImpl(db.gearDao())
+        categoryRepository = CategoryRepositoryImpl(db.categoryDao())
+        locationRepository = LocationRepositoryImpl(db.locationDao())
     }
 }
