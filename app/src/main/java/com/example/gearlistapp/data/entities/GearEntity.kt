@@ -14,35 +14,23 @@ import com.example.gearlistapp.data.model.Gear
  */
 @Entity(tableName = "gear_table")
 data class GearEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String,
+    @PrimaryKey(autoGenerate = true) override val id: Int = 0,
+    override val name: String,
     val description: String,
     val categoryId: Int,
     val locationId: Int
-)
+) : BaseEntity(id, name){
 
-/**
- * A felszereles entitasbol konvertalhato vissza a felszereles modell.
- * @receiver a felszereles entitas.
- * @return a felszereles modell.
- */
-fun GearEntity.asGear(): Gear = Gear(
-    id = id,
-    name = name,
-    description = description,
-    categoryId = categoryId,
-    locationId = locationId
-)
-
-/**
- * A felszereles modellbol konvertalhato vissza a felszereles entitas.
- * @receiver a felszereles modell.
- * @return a felszereles entitas.
- */
-fun Gear.asEntity(): GearEntity = GearEntity(
-    id = id,
-    name = name,
-    description = description,
-    categoryId = categoryId,
-    locationId = locationId
-)
+    /**
+     * A felszereles entitasbol konvertalhato vissza a felszereles modell.
+     * @receiver a felszereles entitas.
+     * @return a felszereles modell.
+     */
+    override fun asBaseModel(): Gear = Gear(
+        id = id,
+        name = name,
+        description = description,
+        categoryId = categoryId,
+        locationId = locationId
+    )
+}
