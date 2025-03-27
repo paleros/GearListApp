@@ -11,16 +11,16 @@ import com.example.gearlistapp.data.model.Location
  */
 @Entity(tableName = "location_table")
 data class LocationEntity(
-    @PrimaryKey(autoGenerate = true) override val id: Int = 0,
-    override val name: String
-) : BaseEntity(id, name){
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val name: String
+){
 
     /**
      * A helyszin entitasbol konvertalhato vissza a helyszin modell.
      * @receiver a helyszin entitas.
      * @return a helyszin modell.
      */
-    override fun asBaseModel(): Location = Location(
+    fun asBaseModel(): Location = Location(
         id = id,
         name = name,
     )

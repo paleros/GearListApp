@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
  * Az alkalmazas adatbazisbol valo adatelerelesi muveletekert felelos osztaly.
  * @param gearDao a GearEntity-khez tartozo DAO.
  */
-class GearRepositoryImpl(private val gearDao: GearDao) : Repository<GearEntity> {
+class GearRepositoryImpl(private val gearDao: GearDao) : GearRepository {
     /**
      * Visszaadja az osszes GearEntity-t.
      * @return az osszes GearEntity.

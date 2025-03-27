@@ -1,8 +1,7 @@
-package com.example.gearlistapp.domain.usecases.all
+package com.example.gearlistapp.domain.usecases.location
 
-import com.example.gearlistapp.data.entities.BaseEntity
-import com.example.gearlistapp.data.model.BaseModel
-import com.example.gearlistapp.data.repository.Repository
+import com.example.gearlistapp.data.model.Location
+import com.example.gearlistapp.data.repository.LocationRepository
 import kotlinx.coroutines.flow.first
 import java.io.IOException
 
@@ -10,14 +9,14 @@ import java.io.IOException
  * A betolteset vegzo osztaly.
  * @property repository a taroloja.
  */
-class LoadOneUseCase(private val repository: Repository<BaseEntity>) {
+class LoadOneLocationUseCase(private val repository: LocationRepository) {
 
     /**
      * betoltese az azonositoja alapjan.
      * @param id az azonositoja.
      * @return az elem.
      */
-    suspend operator fun invoke(id: Int): Result<BaseModel> {
+    suspend operator fun invoke(id: Int): Result<Location> {
         return try {
             Result.success(repository.getById(id).first().asBaseModel())
         } catch (e: IOException) {

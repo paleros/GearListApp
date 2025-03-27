@@ -1,35 +1,38 @@
 package com.example.gearlistapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.gearlistapp.R
-import com.example.gearlistapp.data.dao.CategoryDao
-import com.example.gearlistapp.data.dao.GearDao
-import com.example.gearlistapp.data.dao.LocationDao
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.gearlistapp.GearApplication
 import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.GearEntity
+import com.example.gearlistapp.data.entities.LocationEntity
+import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed class GearListState {
+    object Loading : GearListState()
+    data class Error(val error: Throwable) : GearListState()
+    data class Result(val gearList: List<GearEntity>) : GearListState()
+}
+
 /**
  * A felszereles viewmodelje
- * @param gearDao a felszereles dao-ja
- * @param locationDao a helyszin dao-ja
- * @param categoryDao a kategoria dao-ja
+ * @property gearOperations a felszereles muveletek
  */
 @HiltViewModel
 open class GearViewModel @Inject constructor(
-    private val gearDao: GearDao,
-    private val locationDao: LocationDao,
-    private val categoryDao: CategoryDao
+    private val gearOperations : GearUseCases
 ) : ViewModel() {
 
-    private val _gearList = MutableStateFlow<List<GearEntity>>(emptyList())
+    private val _gearList = MutableStateFlow<GearListState>(GearListState.Loading)
     open val gearList = _gearList.asStateFlow()
 
     init {
@@ -39,61 +42,49 @@ open class GearViewModel @Inject constructor(
     /**
      * A felszerelesek betoltese
      */
-    private fun loadGears() {
+    fun loadGears() {
         viewModelScope.launch {
-            _gearList.value = gearDao.getAllGears().firstOrNull() ?: emptyList()
+            try {
+                _gearList.value = GearListState.Loading
+                val gears = gearOperations.loads().getOrThrow().map { it.asEntity() }
+                _gearList.value = GearListState.Result(
+                    gearList = gears
+                )
+            } catch (e: Exception) {
+                _gearList.value = GearListState.Error(e)
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val gearOperations = GearUseCases(GearApplication.gearRepository)
+                GearViewModel(
+                    gearOperations
+                )
+            }
         }
     }
 
     /**
-     * Egy felszereles entitas lekerese az azonositoja alapjan
+     * A felszereles kategoriajanak lekerese
      * @param id a felszereles azonositoja
-     * @return a felszereles entitas
+     * @return a kategoria
      */
-    open fun getCategoryById(id: Int): Flow<CategoryEntity> {
-        return categoryDao.getCategoryById(id)
+    suspend fun getGearCategoryById(id: Int) : CategoryEntity? {
+        val gearCategoryId = GearApplication.gearRepository.getById(id).firstOrNull()?.categoryId
+        return GearApplication.categoryRepository.getById(gearCategoryId).firstOrNull()
+
     }
 
     /**
-     * Egy helyszin nevenek lekerese az azonositoja alapjan
-     * @param id a helyszin azonositoja
-     * @return a helyszin neve
-     */
-    suspend fun getLocationNameById(id: Int): String {
-        return locationDao.getLocationById(id).firstOrNull()?.name ?: R.string.n_a.toString()
-    }
-
-    /**
-     * Egy felszereles entitas lekerese az azonositoja alapjan
+     * A felszereles helyszinenek lekerese
      * @param id a felszereles azonositoja
-     * @return a felszereles entitas
+     * @return a helyszin
      */
-    fun insertGear(gear: GearEntity) {
-        viewModelScope.launch {
-            gearDao.insertGear(gear)
-            loadGears()
-        }
-    }
-
-    /**
-     * Egy felszereles entitas modositasa
-     * @param gear a felszereles entitas
-     */
-    fun updateGear(gear: GearEntity) {
-        viewModelScope.launch {
-            gearDao.updateGear(gear)
-            loadGears()
-        }
-    }
-
-    /**
-     * Egy felszereles entitas torlese
-     * @param gear a felszereles entitas
-     */
-    fun deleteGear(gear: GearEntity) {
-        viewModelScope.launch {
-            gearDao.deleteGear(gear)
-            loadGears()
-        }
+    suspend fun getGearLocationById(id : Int) : LocationEntity? {
+        val gearLocationId = GearApplication.gearRepository.getById(id).firstOrNull()?.locationId
+        return GearApplication.locationRepository.getById(gearLocationId).firstOrNull()
     }
 }

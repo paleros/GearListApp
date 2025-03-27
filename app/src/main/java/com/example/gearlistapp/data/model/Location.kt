@@ -8,16 +8,16 @@ import com.example.gearlistapp.data.entities.LocationEntity
  * @property name a helyszin neve.
  */
 data class Location(
-    override val id: Int,
-    override val name: String
-) : BaseModel(id, name){
+    val id: Int,
+    val name: String
+){
 
     /**
      * A helyszin modellbol konvertalhato vissza a helyszin entitas.
      * @receiver a helyszin modell.
      * @return a helyszin entitas.
      */
-    override fun asEntity(): LocationEntity = LocationEntity(
+    fun asEntity(): LocationEntity = LocationEntity(
         id = id,
         name = name,
     )

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
  * Az alkalmazas kategoria repository osztalya.
  * @property categoryDao a kategoria DAO.
  */
-class CategoryRepositoryImpl(private val categoryDao: CategoryDao) : Repository<CategoryEntity> {
+class CategoryRepositoryImpl(private val categoryDao: CategoryDao) : CategoryRepository {
     /**
      * Visszaadja az osszes kategoriat.
      * @return az osszes kategoria.
@@ -19,7 +19,7 @@ class CategoryRepositoryImpl(private val categoryDao: CategoryDao) : Repository<
      * @param id a kategoria azonositoja.
      * @return a kategoria.
      */
-    override fun getById(id: Int): Flow<CategoryEntity> {
+    fun getById(id: Int?): Flow<CategoryEntity> {
         return categoryDao.getCategoryById(id)
     }
 

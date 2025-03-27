@@ -13,21 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gearlistapp.R
-import com.example.gearlistapp.data.dao.CategoryDao
-import com.example.gearlistapp.data.dao.GearDao
-import com.example.gearlistapp.data.dao.LocationDao
-import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.GearEntity
-import com.example.gearlistapp.data.entities.LocationEntity
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
 
 /**
  * A felszereles lista megjelenitese
@@ -35,7 +25,7 @@ import kotlinx.coroutines.flow.flow
  */
 @Composable
 fun GearListScreen(viewModel: GearViewModel) {
-    val gear: List<GearEntity> = viewModel.gearList.collectAsState(initial = emptyList()).value
+    val gear: List<GearEntity> = viewModel.gearList.collectAsState().value as List<GearEntity>
 
     Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         /** Szures gomb */

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
  * Az alkalmazas lokacioinak repository osztalya.
  * @property locationDao a lokaciokat tarolo DAO
  */
-class LocationRepositoryImpl(private val locationDao: LocationDao) : Repository<LocationEntity> {
+class LocationRepositoryImpl(private val locationDao: LocationDao) : LocationRepository {
     /**
      * Visszaadja az osszes lokaciot.
      * @return az osszes lokacio.
@@ -19,7 +19,7 @@ class LocationRepositoryImpl(private val locationDao: LocationDao) : Repository<
      * @param id a lokacio azonositoja.
      * @return a lokacio.
      */
-    override fun getById(id: Int): Flow<LocationEntity> {
+    fun getById(id: Int?): Flow<LocationEntity> {
         return locationDao.getLocationById(id)
     }
 

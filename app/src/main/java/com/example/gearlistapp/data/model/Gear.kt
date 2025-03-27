@@ -11,19 +11,19 @@ import com.example.gearlistapp.data.entities.GearEntity
  * @property locationId a felszereles helyszin azonositoja.
  */
 data class Gear(
-    override val id: Int,
-    override val name: String,
+    val id: Int,
+    val name: String,
     val description: String,
     val categoryId: Int,
     val locationId: Int
-) : BaseModel(id, name){
+){
 
     /**
      * A felszereles modellbol konvertalhato vissza a felszereles entitas.
      * @receiver a felszereles modell.
      * @return a felszereles entitas.
      */
-    override fun asEntity(): GearEntity = GearEntity(
+    fun asEntity(): GearEntity = GearEntity(
         id = id,
         name = name,
         description = description,

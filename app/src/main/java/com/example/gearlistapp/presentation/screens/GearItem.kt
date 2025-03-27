@@ -26,13 +26,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.room.Room
+import com.example.gearlistapp.GearApplication
 import com.example.gearlistapp.R
 import com.example.gearlistapp.data.dao.CategoryDao
 import com.example.gearlistapp.data.dao.GearDao
 import com.example.gearlistapp.data.dao.LocationDao
+import com.example.gearlistapp.data.database.AppDatabase
 import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.GearEntity
 import com.example.gearlistapp.data.entities.LocationEntity
+import com.example.gearlistapp.data.repository.GearRepositoryImpl
+import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -46,16 +51,16 @@ import kotlinx.coroutines.flow.flow
 fun GearItem(gear: GearEntity, viewModel: GearViewModel) {
 
     var category by remember { mutableStateOf<CategoryEntity?>(null) }
+    var location by remember { mutableStateOf<LocationEntity?>(null) }
     var locationName by remember { mutableStateOf("") }
 
     /** A Flow osszegyujtese */
     LaunchedEffect(gear.categoryId) {
-        viewModel.getCategoryById(gear.categoryId).collect { fetchedCategory ->
-            category = fetchedCategory
-        }
+        category = viewModel.getGearCategoryById(gear.categoryId)
     }
     LaunchedEffect(gear.locationId) {
-        locationName = viewModel.getLocationNameById(gear.locationId)
+        location = viewModel.getGearLocationById(gear.locationId)
+        locationName = location?.name ?: ""
     }
 
     val categoryColor = category?.color ?: Color.Gray
@@ -98,11 +103,7 @@ fun GearItem(gear: GearEntity, viewModel: GearViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewGearItem() {
-    val viewModel = GearViewModel(
-        gearDao = TestGearDao(),
-        categoryDao = TestCategoryDao(),
-        locationDao = TestLocationDao()
-    )
+    val viewModel = GearViewModel(GearUseCases(GearRepositoryImpl(TestGearDao())))
     val gear = GearEntity(
         id = 1,
         name = "Tura hatizsak",
