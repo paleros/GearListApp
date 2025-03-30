@@ -8,7 +8,7 @@ import com.example.gearlistapp.data.entities.LocationEntity
  * @property name a helyszin neve.
  */
 data class Location(
-    val id: Int,
+    val id: Int?,
     val name: String
 ){
 

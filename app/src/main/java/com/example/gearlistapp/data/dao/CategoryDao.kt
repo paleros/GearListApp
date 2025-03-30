@@ -30,7 +30,7 @@ interface CategoryDao {
      * @return a kategoria.
      */
     @Query("SELECT * FROM category_table WHERE id = :id")
-    fun getCategoryById(id: Int): Flow<CategoryEntity>
+    fun getCategoryById(id: Int?): Flow<CategoryEntity>
 
     /**
      * Kategoria frissitese az adatbazisban.
@@ -51,5 +51,5 @@ interface CategoryDao {
      * @param id a kategoria azonositoja.
      */
     @Query("DELETE FROM category_table WHERE id = :id")
-    suspend fun deleteCategoryById(id: Int)
+    suspend fun deleteCategoryById(id: Int?)
 }

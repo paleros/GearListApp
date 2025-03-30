@@ -14,7 +14,7 @@ import com.example.gearlistapp.data.entities.LocationEntity
  */
 @Database(entities = [GearEntity::class, CategoryEntity::class, LocationEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun gearDao(): GearDao
-    abstract fun categoryDao(): CategoryDao
-    abstract fun locationDao(): LocationDao
+    abstract val gearDao : GearDao
+    abstract val categoryDao : CategoryDao
+    abstract val locationDao : LocationDao
 }

@@ -1,7 +1,7 @@
 package com.example.gearlistapp.domain.usecases.gear
 
-import com.example.gearlistapp.data.repository.GearRepository
 import com.example.gearlistapp.data.model.Gear
+import com.example.gearlistapp.data.repository.GearRepository
 import kotlinx.coroutines.flow.first
 import java.io.IOException
 

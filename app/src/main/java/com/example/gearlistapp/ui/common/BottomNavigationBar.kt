@@ -8,6 +8,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.gearlistapp.R
@@ -32,9 +33,12 @@ fun BottomNavigationBar(navController: NavController) {
 
         screenItems.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(painter = painterResource(id = screen.iconRes), contentDescription = screen.title,
-                    tint = MaterialTheme.colorScheme.onSecondary) },
-                label = { Text(screen.title, color = MaterialTheme.colorScheme.onSecondary) },
+                icon = { Icon(painter = painterResource(id = screen.iconRes),
+                    contentDescription = stringResource(id = screen.title),
+                    tint = MaterialTheme.colorScheme.onSecondary)
+                },
+                label = { Text(stringResource(id =screen.title),
+                    color = MaterialTheme.colorScheme.onSecondary) },
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {

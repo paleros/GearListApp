@@ -30,7 +30,7 @@ interface LocationDao {
      * @return a helyszin.
      */
     @Query("SELECT * FROM location_table WHERE id = :id")
-    fun getLocationById(id: Int): Flow<LocationEntity>
+    fun getLocationById(id: Int?): Flow<LocationEntity>
 
     /**
      * Helyszin frissitese az adatbazisban.
@@ -51,5 +51,5 @@ interface LocationDao {
      * @param id a helyszin azonositoja.
      */
     @Query("DELETE FROM location_table WHERE id = :id")
-    suspend fun deleteLocationById(id: Int)
+    suspend fun deleteLocationById(id: Int?)
 }

@@ -30,7 +30,7 @@ interface GearDao {
      * @return a felszereles.
      */
     @Query("SELECT * FROM gear_table WHERE id = :id")
-    fun getGearById(id: Int): Flow<GearEntity>
+    fun getGearById(id: Int?): Flow<GearEntity>
 
     /**
      * Felszereles frissitese az adatbazisban.
@@ -51,5 +51,5 @@ interface GearDao {
      * @param id a felszereles azonositoja.
      */
     @Query("DELETE FROM gear_table WHERE id = :id")
-    suspend fun deleteGearById(id: Int)
+    suspend fun deleteGearById(id: Int?)
 }

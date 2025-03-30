@@ -3,9 +3,9 @@ package com.example.gearlistapp
 import android.app.Application
 import androidx.room.Room
 import com.example.gearlistapp.data.database.AppDatabase
-import com.example.gearlistapp.data.repository.CategoryRepositoryImpl
-import com.example.gearlistapp.data.repository.LocationRepositoryImpl
-import com.example.gearlistapp.data.repository.GearRepositoryImpl
+import com.example.gearlistapp.data.repository.CategoryRepository
+import com.example.gearlistapp.data.repository.LocationRepository
+import com.example.gearlistapp.data.repository.GearRepository
 
 /**
  * Az alkalmazás fo osztalya,
@@ -16,9 +16,9 @@ class GearApplication : Application() {
     companion object {
         private lateinit var db: AppDatabase
 
-        lateinit var gearRepository: GearRepositoryImpl
-        lateinit var categoryRepository: CategoryRepositoryImpl
-        lateinit var locationRepository: LocationRepositoryImpl
+        lateinit var gearRepository: GearRepository
+        lateinit var categoryRepository: CategoryRepository
+        lateinit var locationRepository: LocationRepository
     }
 
     override fun onCreate() {
@@ -27,10 +27,10 @@ class GearApplication : Application() {
             applicationContext,
             AppDatabase::class.java,
             "gearlist_database"
-        ).fallbackToDestructiveMigration().build()
+        ).build()
 
-        gearRepository = GearRepositoryImpl(db.gearDao())
-        categoryRepository = CategoryRepositoryImpl(db.categoryDao())
-        locationRepository = LocationRepositoryImpl(db.locationDao())
+        gearRepository = GearRepository(db.gearDao)
+        categoryRepository = CategoryRepository(db.categoryDao)
+        locationRepository = LocationRepository(db.locationDao)
     }
 }

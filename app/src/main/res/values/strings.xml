@@ -8,4 +8,15 @@
     <string name="gear_lists">Gear lists</string>
     <string name="n_a">N/A</string>
     <string name="filter">Filter</string>
+    <string name="text_empty_gear_list">Gear list is empty.</string>
+    <string name="some_error_message">Error</string>
+    <string name="text_your_gear_list">Your gear\n</string>
+    <string name="add_new_gear">Add new gear</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="category">Category</string>
+    <string name="loaction">Location</string>
+    <string name="datas">Datas</string>
 </resources>

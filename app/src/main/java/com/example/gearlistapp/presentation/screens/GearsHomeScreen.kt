@@ -9,8 +9,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.gearlistapp.GearApplication.Companion.gearRepository
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 
 /**
@@ -19,7 +21,7 @@ import com.example.gearlistapp.presentation.viewmodel.GearViewModel
  * @param viewModel a felszerelesekhez tartozo ViewModel
  */
 @Composable
-fun GearsHomeScreen(navController: NavController, viewModel: GearViewModel) {
+fun GearsHomeScreen(viewModel: GearViewModel = viewModel(factory = GearViewModel.Factory)) {
 
     Column(
         modifier = Modifier
@@ -27,8 +29,7 @@ fun GearsHomeScreen(navController: NavController, viewModel: GearViewModel) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("This is Gears Home Screen", style = MaterialTheme.typography.headlineMedium)
-        GearListScreen(viewModel = viewModel)
+        GearListScreen()
     }
 
 }

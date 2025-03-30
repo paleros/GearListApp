@@ -23,24 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.room.Room
-import com.example.gearlistapp.GearApplication
 import com.example.gearlistapp.R
-import com.example.gearlistapp.data.dao.CategoryDao
-import com.example.gearlistapp.data.dao.GearDao
-import com.example.gearlistapp.data.dao.LocationDao
-import com.example.gearlistapp.data.database.AppDatabase
 import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.GearEntity
 import com.example.gearlistapp.data.entities.LocationEntity
-import com.example.gearlistapp.data.repository.GearRepositoryImpl
-import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 /**
  * Egy felszereles elem megjelenitese
@@ -100,7 +89,7 @@ fun GearItem(gear: GearEntity, viewModel: GearViewModel) {
 /**
  * A felszereles elemnek a tesztelese
  */
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun PreviewGearItem() {
     val viewModel = GearViewModel(GearUseCases(GearRepositoryImpl(TestGearDao())))
@@ -178,8 +167,9 @@ class TestCategoryDao : CategoryDao {
 }
 
 class TestLocationDao : LocationDao {
-    override fun getLocationById(id: Int): Flow<LocationEntity> = flow {
-        emit(LocationEntity(id = id,
+    override fun getLocationById(id: Int?): Flow<LocationEntity> = flow {
+        emit(LocationEntity(
+            id = id,
             name = "Szekreny"))
     }
 
@@ -191,7 +181,8 @@ class TestLocationDao : LocationDao {
         return flow {
             emit(
                 listOf(
-                    LocationEntity(id = 1,
+                    LocationEntity(
+                        id = 1,
                         name = "Szekreny")
                 )
             )
@@ -201,4 +192,4 @@ class TestLocationDao : LocationDao {
     override suspend fun insertLocation(location: LocationEntity) {}
 
     override suspend fun updateLocation(location: LocationEntity) {}
-}
+}*/

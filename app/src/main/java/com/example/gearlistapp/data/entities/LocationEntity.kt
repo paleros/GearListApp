@@ -11,7 +11,7 @@ import com.example.gearlistapp.data.model.Location
  */
 @Entity(tableName = "location_table")
 data class LocationEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int? = 0,
     val name: String
 ){
 

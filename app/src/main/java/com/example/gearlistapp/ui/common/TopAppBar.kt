@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -52,12 +53,14 @@ fun TopAppBar(navController: NavController) {
         /** A cim adatai, ikon es szoveg. */
         title = {
             Row {
-                Image(painter = painterResource(id = currentScreen.iconRes),
+                Image(
+                    painter = painterResource(id = currentScreen.iconRes),
                     contentDescription = "Screen Icon",
                     modifier = Modifier.size(30.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
+                )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = currentScreen.title)
+                Text(text = stringResource(id =currentScreen.title))
             }
         },
         /** A menu ikon. */

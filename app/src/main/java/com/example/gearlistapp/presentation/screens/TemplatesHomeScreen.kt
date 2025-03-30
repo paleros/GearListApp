@@ -7,14 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
+import com.example.gearlistapp.GearApplication.Companion.gearRepository
+import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+
 /**
  * A sablonok fokepernyojet reprezentalo komponens.
  * @param navController a navigacios controller
  */
 @Composable
-fun TemplatesHomeScreen(navController: NavController) {
+fun TemplatesHomeScreen() {
     Text("This is Templates Home Screen")
 }
 
@@ -24,5 +28,5 @@ fun TemplatesHomeScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewTemplatesHomeScreen() {
-    TemplatesHomeScreen(rememberNavController())
+    TemplatesHomeScreen()
 }
