@@ -81,4 +81,14 @@ class GearViewModel(
         val gearLocationId = GearApplication.gearRepository.getById(id).firstOrNull()?.locationId
         return GearApplication.locationRepository.getById(gearLocationId).firstOrNull()
     }
+
+    /**
+     * A felszereles torlese
+     * @param id a felszereles azonositoja
+     */
+    fun deleteGear(id: Int) {
+        viewModelScope.launch {
+            gearOperations.delete(id)
+        }
+    }
 }

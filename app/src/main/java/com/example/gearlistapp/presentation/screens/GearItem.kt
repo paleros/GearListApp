@@ -1,5 +1,6 @@
 package com.example.gearlistapp.presentation.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.GearEntity
@@ -37,7 +39,9 @@ import com.example.gearlistapp.presentation.viewmodel.GearViewModel
  * @param viewModel a felszereles viewmodelje
  */
 @Composable
-fun GearItem(gear: GearEntity, viewModel: GearViewModel) {
+fun GearItem(gear: GearEntity,
+             viewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+             onClick: () -> Unit) {
 
     var category by remember { mutableStateOf<CategoryEntity?>(null) }
     var location by remember { mutableStateOf<LocationEntity?>(null) }
@@ -59,7 +63,8 @@ fun GearItem(gear: GearEntity, viewModel: GearViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {onClick()},
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = categoryColor as Color)
     ) {

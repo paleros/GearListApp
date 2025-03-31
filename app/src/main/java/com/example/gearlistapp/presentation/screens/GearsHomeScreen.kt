@@ -25,8 +25,7 @@ fun GearsHomeScreen(viewModel: GearViewModel = viewModel(factory = GearViewModel
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         GearListScreen()

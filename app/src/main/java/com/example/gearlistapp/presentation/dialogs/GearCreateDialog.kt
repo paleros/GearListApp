@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.screens
+package com.example.gearlistapp.presentation.dialogs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,11 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.gearlistapp.GearApplication
-import com.example.gearlistapp.GearApplication.Companion.gearRepository
 import com.example.gearlistapp.R
-import com.example.gearlistapp.data.model.Gear
-import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 
 @Composable
 fun GearCreateDialog(onDismiss: () -> Unit, onSave: (String, String, Int, Int) -> Unit) {

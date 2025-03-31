@@ -19,4 +19,8 @@
     <string name="category">Category</string>
     <string name="loaction">Location</string>
     <string name="datas">Datas</string>
+    <string name="location">Location</string>
+    <string name="want_delete">Are you sure you want to delete it?</string>
+    <string name="cannot_be_undone">This action cannot be undone!</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -29,7 +27,6 @@ import com.example.gearlistapp.ui.model.toUiText
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
@@ -43,6 +40,10 @@ import com.example.gearlistapp.data.model.Gear
 import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 import com.example.gearlistapp.ui.model.asGearEntity
 import androidx.compose.material3.Icon
+import com.example.gearlistapp.presentation.dialogs.GearCreateDialog
+import com.example.gearlistapp.presentation.dialogs.GearDetailDialog
+import com.example.gearlistapp.ui.model.GearUi
+import com.example.gearlistapp.ui.model.asGear
 import kotlinx.coroutines.launch
 
 /**
@@ -51,14 +52,16 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun GearListScreen(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory)) {
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory)
+) {
 
 
     val gearList = gearViewModel.state.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-    var showDialog by remember { mutableStateOf(false) }
+    var showAddDialog by remember { mutableStateOf(false) }
+    var selectedGear by remember { mutableStateOf<GearUi?>(null) }
 
     //TODO automatikus frissitese a lista megjelenesnek
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -78,7 +81,7 @@ fun GearListScreen(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             LargeFloatingActionButton(
-                onClick = { showDialog = true },
+                onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -119,7 +122,8 @@ fun GearListScreen(
                                     .fillMaxSize()
                             ) {
                                 items(gearList.gearList, key = { gear -> gear.id }) { gear ->
-                                    GearItem(gear.asGearEntity(), gearViewModel)
+                                    GearItem(gear.asGearEntity(),
+                                        onClick = { selectedGear = gear })
                                 }
                             }
                         }
@@ -129,14 +133,29 @@ fun GearListScreen(
         }
     }
 
-    if (showDialog) {
+    if (showAddDialog) {
         GearCreateDialog(
-            onDismiss = { showDialog = false },
+            onDismiss = { showAddDialog = false },
             onSave = { name, description, categoryId, locationId ->
                 coroutineScope.launch {
                     saveToDatabase(name, description, categoryId, locationId)
-                    showDialog = false
+                    showAddDialog = false
                 }
+            }
+        )
+    }
+
+    selectedGear?.let {gear ->
+        GearDetailDialog(
+            gear = gear.asGear(),
+            onDismiss = { selectedGear = null },
+            onDelete = { id ->
+                gearViewModel.deleteGear(id)
+                selectedGear = null
+            },
+            onEdit = { gearToEdit ->
+                // TODO szerkesztes funkcio
+                selectedGear = null
             }
         )
     }
