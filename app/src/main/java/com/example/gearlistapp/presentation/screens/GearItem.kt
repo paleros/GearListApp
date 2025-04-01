@@ -58,11 +58,11 @@ fun GearItem(gear: GearEntity,
 
     /** A Flow osszegyujtese */
     LaunchedEffect(gear.categoryId) {
-        category = viewModel.getGearCategoryById(gear.categoryId)
+        //category = viewModel.getGearCategoryById(gear.categoryId) TODO
     }
     LaunchedEffect(gear.locationId) {
-        location = viewModel.getGearLocationById(gear.locationId)
-        locationName = location?.name ?: ""
+        //location = viewModel.getGearLocationById(gear.locationId) TODO
+        //locationName = location?.name ?: ""
     }
 
     val categoryColor = category?.color ?: Color.Gray

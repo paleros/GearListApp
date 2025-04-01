@@ -5,7 +5,6 @@ package com.example.gearlistapp
 //TODO location beallitasa a gearnal
 //TODO location megjelenitese a gearnal
 
-//TODO category lista, megjelenes, hozzaadas, torles
 //TODO category beallitasa a gearnal
 //TODO category megjelenitese a gearnal
 
