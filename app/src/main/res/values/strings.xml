@@ -36,4 +36,9 @@
     <string name="text_empty_location_list">Location list is empty.</string>
     <string name="add_new_location">Add new location</string>
     <string name="menu">Menu</string>
+    <string name="gear_list_app">Gear List App</string>
+    <string name="version">Version</string>
+    <string name="version_number">1.0.0</string>
+    <string name="about_description">This app helps you organize your gear for trips and hikes. It ensures that you don\'t leave anything behind.</string>
+    <string name="about_created_by">Created by Erős Pál\nContact: pal.eros@edu.bme.hu\n\nDeveloped as part of the\nBudapest University of Technology and Economics\nFaculty of Electrical Engineering and Informatics\nComputer Engineering, M.Sc.\nMobile Software Platforms\ncourse.</string>
 </resources>

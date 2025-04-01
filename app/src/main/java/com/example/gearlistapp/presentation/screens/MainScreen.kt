@@ -32,6 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.gearlistapp.R
 import com.example.gearlistapp.navigation.NavGraph
+import com.example.gearlistapp.presentation.dialogs.AboutDialog
 import com.example.gearlistapp.presentation.dialogs.CategoryListDialog
 import com.example.gearlistapp.presentation.dialogs.LocationListDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
@@ -126,7 +127,7 @@ fun DrawerContent(onClose: () -> Unit) {
         //ImportDialog(onDismiss = { showImportDialog = false })
     }
     if (showAboutDialog) {
-        //AboutDialog(onDismiss = { showAboutDialog = false })
+        AboutDialog(onDismiss = { showAboutDialog = false })
     }
 }
 
