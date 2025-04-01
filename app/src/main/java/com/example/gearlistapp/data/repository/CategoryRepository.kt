@@ -28,7 +28,12 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
      * @param category a beszurando kategoria.
      */
     suspend fun insert(category: CategoryEntity) {
-        categoryDao.insertCategory(category)
+        /** Id generalas automatikus marad*/
+        val name = category.name
+        val color = category.color
+        val iconName = category.iconName
+        val newCategory = CategoryEntity(name = name, color = color, iconName = iconName)
+        categoryDao.insertCategory(newCategory)
     }
 
     /**

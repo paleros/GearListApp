@@ -1,7 +1,6 @@
 package com.example.gearlistapp.domain.usecases.category
 
 import com.example.gearlistapp.data.model.Category
-import com.example.gearlistapp.data.model.Gear
 import com.example.gearlistapp.data.repository.CategoryRepository
 
 /**

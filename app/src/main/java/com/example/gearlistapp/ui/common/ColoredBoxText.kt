@@ -23,6 +23,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * A komponens, amely egy szoveget es egy ikont tartalmaz egy szinezett dobozban.
+ * @param text a megjelenitendo szoveg
+ * @param icon az ikont reprezentalo ImageVector
+ * @param backgroundColor a doboz hatter szine
+ * @param textColor a szoveg szine
+ */
 @Composable
 fun ColoredIconBoxText(text: String, icon: ImageVector, backgroundColor: Color, textColor: Color) {
     Card(
@@ -55,6 +62,9 @@ fun ColoredIconBoxText(text: String, icon: ImageVector, backgroundColor: Color, 
     }
 }
 
+/**
+ * Preview fuggveny a ColoredIconBoxText komponenshez.
+ */
 @Preview
 @Composable
 fun PreviewColoredBoxText() {

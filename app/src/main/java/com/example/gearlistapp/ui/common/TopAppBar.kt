@@ -28,10 +28,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.gearlistapp.R
 import com.example.gearlistapp.navigation.homeScreens
+import com.example.gearlistapp.presentation.dialogs.CategoryListDialog
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 
 /**
  * A felso app savot reprezentalo komponens.
@@ -44,13 +48,13 @@ fun TopAppBar(navController: NavController) {
     val currentScreen = homeScreens.find { it.route == navBackStackEntry.value?.destination?.route } ?: homeScreens.first()
 
     var menuExpanded by remember { mutableStateOf(false) }
+    var showCategoryDialog by remember { mutableStateOf(false) }
 
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        /** A cim adatai, ikon es szoveg. */
         title = {
             Row {
                 Image(
@@ -74,8 +78,11 @@ fun TopAppBar(navController: NavController) {
                 expanded = menuExpanded,
                 onDismissRequest = { menuExpanded = false }
             ) {
-                DropdownMenuItem(text = { Text("Option 1") }, onClick = { /*TODO menü opció*/ })
-                DropdownMenuItem(text = { Text("Option 2") }, onClick = { /*TODO menü opció*/ })
+                DropdownMenuItem(text = { Text(stringResource(id = R.string.gear_categories)) }, onClick = { showCategoryDialog = true })
+                DropdownMenuItem(text = { Text(stringResource(id = R.string.locations)) }, onClick = { /*TODO menü opció*/ })
+                DropdownMenuItem(text = { Text(stringResource(id = R.string.export_list)) }, onClick = { /*TODO menü opció*/ })
+                DropdownMenuItem(text = { Text(stringResource(id = R.string.import_list)) }, onClick = { /*TODO menü opció*/ })
+                DropdownMenuItem(text = { Text(stringResource(id = R.string.about)) }, onClick = { /*TODO menü opció*/ })
             }
         },
         /** A kereso ikon. */
@@ -87,6 +94,13 @@ fun TopAppBar(navController: NavController) {
             }
         }
     )
+
+    if (showCategoryDialog) {
+        CategoryListDialog(
+            categoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+            onDismiss = { showCategoryDialog = false }
+        )
+    }
 }
 
 /**

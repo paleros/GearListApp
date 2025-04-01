@@ -18,6 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.gearlistapp.R
 
+/**
+ * A felszereles letrehozo dialogus
+ * @param onDismiss a dialogus bezarasa
+ * @param onSave a felszereles elmentese
+ */
 @Composable
 fun GearCreateDialog(onDismiss: () -> Unit, onSave: (String, String, Int, Int) -> Unit) {
     var name by remember { mutableStateOf("") }

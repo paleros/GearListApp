@@ -9,6 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backpack
+import androidx.compose.material.icons.filled.Checkroom
+import androidx.compose.material.icons.filled.Cookie
+import androidx.compose.material.icons.filled.ElectricalServices
+import androidx.compose.material.icons.filled.Festival
+import androidx.compose.material.icons.filled.RocketLaunch
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -22,12 +31,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.gearlistapp.R
 import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.GearEntity
 import com.example.gearlistapp.data.entities.LocationEntity
@@ -37,6 +45,7 @@ import com.example.gearlistapp.presentation.viewmodel.GearViewModel
  * Egy felszereles elem megjelenitese
  * @param gear a felszereles entitas
  * @param viewModel a felszereles viewmodelje
+ * @param onClick a kattintas esemeny
  */
 @Composable
 fun GearItem(gear: GearEntity,
@@ -57,7 +66,7 @@ fun GearItem(gear: GearEntity,
     }
 
     val categoryColor = category?.color ?: Color.Gray
-    val categoryIcon = category?.iconRes ?: R.drawable.ic_launcher_foreground
+    val categoryIcon = category?.iconName ?: "Icons.Default.Star"
 
 
     Card(
@@ -73,7 +82,7 @@ fun GearItem(gear: GearEntity,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(id = categoryIcon),
+                imageVector = stringToImageVector(categoryIcon),
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.run { size(40.dp) }
@@ -92,109 +101,20 @@ fun GearItem(gear: GearEntity,
 }
 
 /**
- * A felszereles elemnek a tesztelese
+ * Stringbol ImageVector-t keszit
+ * @param iconName az ikon neve
+ * @return az ikon ImageVector-e
  */
-/*@Preview(showBackground = true)
-@Composable
-fun PreviewGearItem() {
-    val viewModel = GearViewModel(GearUseCases(GearRepositoryImpl(TestGearDao())))
-    val gear = GearEntity(
-        id = 1,
-        name = "Tura hatizsak",
-        categoryId = 1,
-        locationId = 1,
-        description = "Valami random leiras a megjelenes tesztelesehez"
-    )
-
-    GearItem(gear = gear, viewModel = viewModel)
+fun stringToImageVector(iconName: String): ImageVector {
+    return when (iconName) {
+        "Icons.Default.Star" -> Icons.Default.Star
+        "Icons.Default.Festival" -> Icons.Default.Festival
+        "Icons.Default.Backpack" -> Icons.Default.Backpack
+        "Icons.Default.ElectricalServices" -> Icons.Default.ElectricalServices
+        "Icons.Default.Checkroom" -> Icons.Default.Checkroom
+        "Icons.Default.WaterDrop" -> Icons.Default.WaterDrop
+        "Icons.Default.RocketLaunch" -> Icons.Default.RocketLaunch
+        "Icons.Default.Cookie" -> Icons.Default.Cookie
+        else -> Icons.Default.Star
+    }
 }
-
-class TestGearDao : GearDao {
-    override fun getAllGears(): Flow<List<GearEntity>> = flow {
-        emit(
-            listOf(
-                GearEntity(id = 1,
-                    name = "Tura hatizsak",
-                    categoryId = 1,
-                    locationId = 1,
-                    description = "Valami random leiras a megjelenes tesztelesehez"),
-            )
-        )
-    }
-
-    override suspend fun deleteGear(gear: GearEntity) {}
-
-    override suspend fun deleteGearById(id: Int) {}
-
-    override fun getGearById(id: Int): Flow<GearEntity> {
-        return flow {
-            emit(
-                GearEntity(id = 1,
-                    name = "Tura hatizsak",
-                    categoryId = 1,
-                    locationId = 1,
-                    description = "Valami random leiras a megjelenes tesztelesehez")
-            )
-        }
-    }
-
-    override suspend fun insertGear(gear: GearEntity) {}
-
-    override suspend fun updateGear(gear: GearEntity) {}
-}
-
-class TestCategoryDao : CategoryDao {
-    override fun getCategoryById(id: Int): Flow<CategoryEntity> = flow {
-        emit(CategoryEntity(id = id,
-            name = "Csomagolas",
-            color = Color.Green.value.toInt(),
-            iconRes = R.drawable.ic_launcher_foreground))
-    }
-
-    override fun getAllCategories(): Flow<List<CategoryEntity>> = flow {
-        emit(
-            listOf(
-                CategoryEntity(id = 1,
-                    name = "Csomagolas",
-                    color = Color.Green.value.toInt(),
-                    iconRes = R.drawable.ic_launcher_foreground)
-            )
-        )
-    }
-
-    override suspend fun deleteCategory(category: CategoryEntity) {}
-
-    override suspend fun deleteCategoryById(id: Int) {}
-
-    override suspend fun insertCategory(category: CategoryEntity) {}
-
-    override suspend fun updateCategory(category: CategoryEntity) {}
-}
-
-class TestLocationDao : LocationDao {
-    override fun getLocationById(id: Int?): Flow<LocationEntity> = flow {
-        emit(LocationEntity(
-            id = id,
-            name = "Szekreny"))
-    }
-
-    override suspend fun deleteLocation(location: LocationEntity) {}
-
-    override suspend fun deleteLocationById(id: Int) {}
-
-    override fun getAllLocations(): Flow<List<LocationEntity>> {
-        return flow {
-            emit(
-                listOf(
-                    LocationEntity(
-                        id = 1,
-                        name = "Szekreny")
-                )
-            )
-        }
-    }
-
-    override suspend fun insertLocation(location: LocationEntity) {}
-
-    override suspend fun updateLocation(location: LocationEntity) {}
-}*/

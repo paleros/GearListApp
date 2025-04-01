@@ -1,6 +1,15 @@
 package com.example.gearlistapp.data.entities
 
-import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backpack
+import androidx.compose.material.icons.filled.Checkroom
+import androidx.compose.material.icons.filled.Cookie
+import androidx.compose.material.icons.filled.ElectricalServices
+import androidx.compose.material.icons.filled.Festival
+import androidx.compose.material.icons.filled.RocketLaunch
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.WaterDrop
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.gearlistapp.data.model.Category
@@ -9,14 +18,14 @@ import com.example.gearlistapp.data.model.Category
  * A felszereles kategoriakat reprezentalo osztalya.
  * @property id a kategoria azonositoja.
  * @property name a kategoria neve.
- * @property iconRes a kategoria ikonja.
+ * @property iconName a kategoria ikonja.
  * @property color a kategoria szine.
  */
 @Entity(tableName = "category_table")
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
     var name: String,
-    @DrawableRes var iconRes: Int,
+    var iconName: String,
     var color: Int
 ){
 
@@ -28,7 +37,7 @@ data class CategoryEntity(
     fun asBaseModel(): Category = Category(
         id = id,
         name = name,
-        iconRes = iconRes,
+        iconName = iconName,
         color = color,
     )
 }

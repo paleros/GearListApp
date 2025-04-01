@@ -2,6 +2,20 @@ package com.example.gearlistapp
 
 //A következő feladatok listája
 
-//TODO viewmodel leírása
-//TODO createviewmodel és a többi folytatni az AUT leírás alapján
-//TODO cél megjeleníteni az adatbázis elemeit az alkalmazásban
+//TODO location beallitasa a gearnal
+//TODO location megjelenitese a gearnal
+
+//TODO category lista, megjelenes, hozzaadas, torles
+//TODO category beallitasa a gearnal
+//TODO category megjelenitese a gearnal
+
+//TODO gear edit
+
+//------------
+//TODO templates
+//TODO actual templates
+//TODO kereses
+
+//------------
+//TODO színek
+//TODO iconok

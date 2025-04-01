@@ -1,18 +1,28 @@
 package com.example.gearlistapp.data.model
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backpack
+import androidx.compose.material.icons.filled.Checkroom
+import androidx.compose.material.icons.filled.Cookie
+import androidx.compose.material.icons.filled.ElectricalServices
+import androidx.compose.material.icons.filled.Festival
+import androidx.compose.material.icons.filled.RocketLaunch
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.WaterDrop
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.gearlistapp.data.entities.CategoryEntity
 
 /**
  * A kategoriat reprezentalo osztaly.
  * @property id a kategoria azonositoja.
  * @property name a kategoria neve.
- * @property iconRes a kategoria ikonja.
+ * @property iconName a kategoria ikonja.
  * @property color a kategoria szine.
  */
 data class Category(
     val id: Int,
     val name: String,
-    val iconRes: Int,
+    val iconName: String,
     val color: Int
 ){
 
@@ -24,7 +34,7 @@ data class Category(
     fun asEntity(): CategoryEntity = CategoryEntity(
         id = id,
         name = name,
-        iconRes = iconRes,
+        iconName = iconName,
         color = color,
     )
 }

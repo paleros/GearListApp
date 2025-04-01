@@ -8,6 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.gearlistapp.R
 
+/**
+ * A torlest megerosito dialoogus komponens.
+ * @param onConfirm a torles megerositese
+ * @param onDismiss a dialoogus bezarasa
+ */
 @Composable
 fun DeleteConfirmationDialog(
     onConfirm: () -> Unit,

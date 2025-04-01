@@ -7,15 +7,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.gearlistapp.GearApplication.Companion.gearRepository
-import com.example.gearlistapp.data.dao.CategoryDao
-import com.example.gearlistapp.data.dao.GearDao
-import com.example.gearlistapp.data.dao.LocationDao
-import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 import com.example.gearlistapp.presentation.screens.GearsHomeScreen
 import com.example.gearlistapp.presentation.screens.HomeScreen
 import com.example.gearlistapp.presentation.screens.TemplatesHomeScreen
-import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 
 /**
  * A navigacios grafot reprezentalo komponens.
@@ -27,7 +21,6 @@ fun NavGraph(
     navController: NavHostController = rememberNavController(),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    //val gearOperations = GearUseCases(gearRepository)
 
     NavHost(navController = navController,
         startDestination = Screen.HomeScreen.route,

@@ -161,13 +161,20 @@ fun GearListScreen(
     }
 }
 
+/**
+ * Felszereles mentese az adatbazisba
+ * @param name a felszereles neve
+ * @param description a felszereles leirasa
+ * @param categoryId a kategori id
+ * @param locationId a helyszin id
+ */
 suspend fun saveToDatabase(name: String, description: String, categoryId: Int, locationId: Int) {
     val newItem = Gear(
         name = name,
         description = description,
         categoryId = categoryId,
         locationId = locationId,
-        id = (Math.random() * Int.MAX_VALUE).toInt()
+        id = 0
     )
     val gearOperations = GearUseCases(gearRepository)
 

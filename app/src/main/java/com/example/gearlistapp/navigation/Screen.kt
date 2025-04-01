@@ -1,8 +1,6 @@
 package com.example.gearlistapp.navigation
 
 import androidx.annotation.DrawableRes
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import com.example.gearlistapp.R
 
 /**

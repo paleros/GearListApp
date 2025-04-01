@@ -28,7 +28,10 @@ class LocationRepository(private val locationDao: LocationDao) {
      * @param gear a beszurando lokacio.
      */
     suspend fun insert(gear: LocationEntity) {
-        locationDao.insertLocation(gear)
+        /** Id generalas automatikus marad*/
+        val name = gear.name
+        val newLocation = LocationEntity(name = name)
+        locationDao.insertLocation(newLocation)
     }
 
     /**

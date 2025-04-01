@@ -23,4 +23,14 @@
     <string name="want_delete">Are you sure you want to delete it?</string>
     <string name="cannot_be_undone">This action cannot be undone!</string>
     <string name="delete">Delete</string>
+    <string name="gear_categories">Gear categories</string>
+    <string name="locations">Locations</string>
+    <string name="export_list">Export list</string>
+    <string name="import_list">Import list</string>
+    <string name="text_empty_category_list">Category list is empty.</string>
+    <string name="add_new_category">Add new category</string>
+    <string name="close">Close</string>
+    <string name="color">Color</string>
+    <string name="icon">Icon</string>
+    <string name="about">About</string>
 </resources>

@@ -28,7 +28,13 @@ class GearRepository(private val gearDao: GearDao) {
      * @param gear a beszurando GearEntity.
      */
     suspend fun insert(gear: GearEntity) {
-        gearDao.insertGear(gear)
+        /** Id generalas automatikus marad*/
+        val name = gear.name
+        val description = gear.description
+        val categoryId = gear.categoryId
+        val locationId = gear.locationId
+        val newGear = GearEntity(name = name, description = description, categoryId = categoryId, locationId = locationId)
+        gearDao.insertGear(newGear)
     }
 
     /**
