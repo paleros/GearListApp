@@ -49,20 +49,20 @@ fun CategoryItem(category: CategoryEntity,
         colors = CardDefaults.cardColors(containerColor = Color(category.color))
     ) {
         Row(
-            modifier = Modifier.padding(10.dp).fillMaxWidth(),
+            modifier = Modifier.padding(5.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = stringToImageVector(category.iconName),
                 contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier.run { size(40.dp) }
+                modifier = Modifier.run { size(20.dp) }
             )
-            Spacer(modifier = Modifier.width(10.dp))
-            Text(text = category.name, fontSize = 30.sp,
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(text = category.name, fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White)
-            Spacer(modifier = Modifier.width(10.dp).weight(1f))
+            Spacer(modifier = Modifier.width(5.dp).weight(1f))
             IconButton(
                 onClick = { showDialog = true },
 

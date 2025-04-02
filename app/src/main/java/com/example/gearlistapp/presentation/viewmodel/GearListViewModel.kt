@@ -11,6 +11,8 @@ import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.ui.model.GearUi
 import com.example.gearlistapp.data.entities.LocationEntity
 import com.example.gearlistapp.domain.usecases.gear.GearUseCases
+import com.example.gearlistapp.ui.model.CategoryUi
+import com.example.gearlistapp.ui.model.asCategoryUi
 import com.example.gearlistapp.ui.model.asGear
 import com.example.gearlistapp.ui.model.asGearUi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,27 +65,6 @@ class GearViewModel(
     }
 
     /**
-     * A felszereles kategoriajanak lekerese
-     * @param id a felszereles azonositoja
-     * @return a kategoria
-     */
-    suspend fun getGearCategoryById(id: Int) : CategoryEntity? {
-        val gearCategoryId = GearApplication.gearRepository.getById(id).firstOrNull()?.categoryId
-        return GearApplication.categoryRepository.getById(gearCategoryId).firstOrNull()
-
-    }
-
-    /**
-     * A felszereles helyszinenek lekerese
-     * @param id a felszereles azonositoja
-     * @return a helyszin
-     */
-    suspend fun getGearLocationById(id : Int) : LocationEntity? {
-        val gearLocationId = GearApplication.gearRepository.getById(id).firstOrNull()?.locationId
-        return GearApplication.locationRepository.getById(gearLocationId).firstOrNull()
-    }
-
-    /**
      * A felszereles torlese
      * @param id a felszereles azonositoja
      */
@@ -111,6 +92,19 @@ class GearViewModel(
             )
             gearOperations.save(newGear.asGear())
             loadGears()
+        }
+    }
+
+    /**
+     * A felszereles visszaadasa id alapjan
+     * @param id a felszereles id-je
+     * @return a felszereles
+     */
+    suspend fun getById(id: Int): GearUi? {
+        return try {
+            gearOperations.load(id).getOrNull()?.asGearUi()
+        } catch (e: Exception) {
+            null
         }
     }
 }

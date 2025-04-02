@@ -39,7 +39,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.GearEntity
 import com.example.gearlistapp.data.entities.LocationEntity
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
+import com.example.gearlistapp.ui.model.asCategory
+import com.example.gearlistapp.ui.model.asLocation
 
 /**
  * Egy felszereles elem megjelenitese
@@ -49,23 +53,24 @@ import com.example.gearlistapp.presentation.viewmodel.GearViewModel
  */
 @Composable
 fun GearItem(gear: GearEntity,
-             viewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+             gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+             categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+             locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
              onClick: () -> Unit) {
 
     var category by remember { mutableStateOf<CategoryEntity?>(null) }
     var location by remember { mutableStateOf<LocationEntity?>(null) }
     var locationName by remember { mutableStateOf("") }
 
-    /** A Flow osszegyujtese */
     LaunchedEffect(gear.categoryId) {
-        //category = viewModel.getGearCategoryById(gear.categoryId) TODO
+        category = categoryViewModel.getById(gear.categoryId)?.asCategory()?.asEntity()
     }
     LaunchedEffect(gear.locationId) {
-        //location = viewModel.getGearLocationById(gear.locationId) TODO
-        //locationName = location?.name ?: ""
+        location = locationViewModel.getById(gear.locationId)?.asLocation()?.asEntity()
+        locationName = location?.name ?: ""
     }
 
-    val categoryColor = category?.color ?: Color.Gray
+    val categoryColor = Color(category?.color ?: -7829368)
     val categoryIcon = category?.iconName ?: "Icons.Default.Star"
 
 
@@ -75,7 +80,7 @@ fun GearItem(gear: GearEntity,
             .padding(8.dp)
             .clickable {onClick()},
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = categoryColor as Color)
+        colors = CardDefaults.cardColors(containerColor = categoryColor)
     ) {
         Row(
             modifier = Modifier.padding(10.dp),

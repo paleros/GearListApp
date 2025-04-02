@@ -48,13 +48,14 @@ fun LocationItem(location: LocationEntity,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
     ) {
         Row(
-            modifier = Modifier.padding(10.dp).fillMaxWidth(),
+            modifier = Modifier.padding(5.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = location.name, fontSize = 20.sp,
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(text = location.name, fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White)
-            Spacer(modifier = Modifier.width(10.dp).weight(1f))
+            Spacer(modifier = Modifier.width(5.dp).weight(1f))
             IconButton(
                 onClick = { showDialog = true },
 

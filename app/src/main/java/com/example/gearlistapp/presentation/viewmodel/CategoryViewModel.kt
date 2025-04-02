@@ -93,4 +93,17 @@ class CategoryViewModel(
         }
         loadCategories()
     }
+
+    /**
+     * A kategoria visszaadasa id alapjan
+     * @param id a kategoria id-je
+     * @return a kategoria
+     */
+    suspend fun getById(id: Int): CategoryUi? {
+        return try {
+            categoryOperations.load(id).getOrNull()?.asCategoryUi()
+        } catch (e: Exception) {
+            null
+        }
+    }
 }
