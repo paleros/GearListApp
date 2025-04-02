@@ -1,10 +1,12 @@
 package com.example.gearlistapp.presentation.dialogs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Text
@@ -35,9 +37,12 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.example.gearlistapp.presentation.screens.stringToImageVector
+import com.example.gearlistapp.presentation.viewmodel.CategoryListState
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationListState
@@ -97,12 +102,18 @@ fun GearCreateDialog(
                     singleLine = false
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(
+                /*TextField(
                     value = categoryId,
                     onValueChange = { categoryId = it },
                     label = { Text(stringResource(id = R.string.category)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = false
+                )*/
+                CategoryDropdown(
+                    categoryViewModel = categoryViewModel,
+                    gearViewModel = gearViewModel,
+                    locationViewModel = locationViewModel,
+                    onCategorySelected = { categoryId = it.toString() }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 LocationDropdown(
@@ -192,6 +203,83 @@ fun LocationDropdown(
                                         expanded = false
                                     },
                                     text = { Text(location.name) },
+                                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CategoryDropdown(
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    onCategorySelected: (Int) -> Unit
+) {
+
+    val categoryList = categoryViewModel.state.collectAsStateWithLifecycle().value
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+    var selectedCategory by remember { mutableStateOf<String>("") }
+
+    LaunchedEffect(Unit) {
+        categoryViewModel.loadCategories()
+    }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+    ) {
+        TextField(
+            value = selectedCategory,
+            onValueChange = {},
+            label = { Text(stringResource(id = R.string.category)) },
+            readOnly = true,
+            modifier = Modifier.fillMaxWidth().menuAnchor(),
+            trailingIcon = {
+                Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+            }
+        )
+
+        when (categoryList) {
+            is CategoryListState.Loading -> CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.secondaryContainer
+            )
+
+            is CategoryListState.Error -> Text(
+                text = categoryList.error.toUiText().asString(context)
+            )
+
+            is CategoryListState.Result -> {
+                if (categoryList.categoryList.isNotEmpty()) {
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.exposedDropdownSize()
+                    ) {
+                        Column(
+                        ) {
+                            categoryList.categoryList.forEach { category ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedCategory = category.name
+                                        onCategorySelected(category.id)
+                                        expanded = false
+                                    },
+                                    text = { Text(category.name) },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = stringToImageVector(category.iconName),
+                                            contentDescription = "Category Icon",
+                                        )
+                                    },
+                                    modifier = Modifier.background(Color(category.color)),
                                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                                 )
                             }

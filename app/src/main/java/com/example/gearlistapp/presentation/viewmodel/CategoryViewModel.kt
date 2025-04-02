@@ -78,12 +78,13 @@ class CategoryViewModel(
      * @param iconRes a kategoria ikonja
      */
     fun add(name: String, color: Int, iconRes: ImageVector) {
+        val iconName = "Icons.Default." + iconRes.name.replaceFirst("Filled.".toRegex(), "")
         viewModelScope.launch {
             try {
                 val category = CategoryUi(
                     name = name,
                     color = color,
-                    iconName = iconRes.name
+                    iconName = iconName
                 )
                 categoryOperations.save(category.asCategory())
             } catch (e: Exception) {
