@@ -101,10 +101,27 @@ fun CategoryCreateDialog(onDismiss: () -> Unit, onSave: (String, Int, ImageVecto
 fun ColorPickerDropdown(selectedColor: Int, onColorSelected: (Int) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     /** A valaszthato szinek listaja */
-    val colors = listOf(Color.Black, Color.Gray, Color.Red, Color.Green, Color.Blue,
-        Color.Yellow, Color(0xFFFFA500), Color(0xFF800080), Color(0xFFFFC0CB),
-        Color(0xFFA52A2A), Color.Cyan, Color.Magenta, Color(0xFF00FF00), Color(0xFF000080),
-        Color(0xFF008080), Color(0xFF808000), Color(0xFF800000), Color(0xFFFFD700), Color(0xFFC0C0C0))
+    val colors = listOf(
+        Color(0xFF231F20),
+        Color(0xFF4A4A4A),
+        Color(0xFF8B3A3A),
+        Color(0xFF2E7D60),
+        Color(0xFF1E4E79),
+        Color(0xFFD9B572),
+        Color(0xFFC47E3A),
+        Color(0xFF5A3E6B),
+        Color(0xFFE5C1B1),
+        Color(0xFF704214),
+        Color(0xFF87A6A3),
+        Color(0xFFB35A9C),
+        Color(0xFF66A676),
+        Color(0xFF0D3058),
+        Color(0xFF427A6B),
+        Color(0xFF8F865A),
+        Color(0xFF5B3223),
+        Color(0xFFE6C266),
+        Color(0xFFB0AFAF)
+    )
 
     Text(
         text = stringResource(id = R.string.color),

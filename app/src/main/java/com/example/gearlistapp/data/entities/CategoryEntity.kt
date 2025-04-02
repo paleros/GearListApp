@@ -1,15 +1,5 @@
 package com.example.gearlistapp.data.entities
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Backpack
-import androidx.compose.material.icons.filled.Checkroom
-import androidx.compose.material.icons.filled.Cookie
-import androidx.compose.material.icons.filled.ElectricalServices
-import androidx.compose.material.icons.filled.Festival
-import androidx.compose.material.icons.filled.RocketLaunch
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.WaterDrop
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.gearlistapp.data.model.Category

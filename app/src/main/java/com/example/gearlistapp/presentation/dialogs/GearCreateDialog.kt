@@ -1,12 +1,11 @@
 package com.example.gearlistapp.presentation.dialogs
 
+
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Text
@@ -29,14 +28,12 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -102,13 +99,6 @@ fun GearCreateDialog(
                     singleLine = false
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                /*TextField(
-                    value = categoryId,
-                    onValueChange = { categoryId = it },
-                    label = { Text(stringResource(id = R.string.category)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = false
-                )*/
                 CategoryDropdown(
                     categoryViewModel = categoryViewModel,
                     gearViewModel = gearViewModel,
@@ -171,7 +161,7 @@ fun LocationDropdown(
             onValueChange = {},
             label = { Text(stringResource(id = R.string.location)) },
             readOnly = true,
-            modifier = Modifier.fillMaxWidth().menuAnchor(),
+            modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true),
             trailingIcon = {
                 Icon(Icons.Default.ArrowDropDown, contentDescription = null)
             }
@@ -193,8 +183,7 @@ fun LocationDropdown(
                         onDismissRequest = { expanded = false },
                         modifier = Modifier.exposedDropdownSize()
                     ) {
-                        Column(
-                        ) {
+                        Column {
                             locationList.locationList.forEach { location ->
                                 DropdownMenuItem(
                                     onClick = {
@@ -241,7 +230,7 @@ fun CategoryDropdown(
             onValueChange = {},
             label = { Text(stringResource(id = R.string.category)) },
             readOnly = true,
-            modifier = Modifier.fillMaxWidth().menuAnchor(),
+            modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true),
             trailingIcon = {
                 Icon(Icons.Default.ArrowDropDown, contentDescription = null)
             }
@@ -263,8 +252,7 @@ fun CategoryDropdown(
                         onDismissRequest = { expanded = false },
                         modifier = Modifier.exposedDropdownSize()
                     ) {
-                        Column(
-                        ) {
+                        Column {
                             categoryList.categoryList.forEach { category ->
                                 DropdownMenuItem(
                                     onClick = {

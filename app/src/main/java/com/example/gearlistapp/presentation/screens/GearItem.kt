@@ -1,7 +1,6 @@
 package com.example.gearlistapp.presentation.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -77,30 +76,29 @@ fun GearItem(gear: GearEntity,
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(5.dp)
             .clickable {onClick()},
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = categoryColor)
     ) {
         Row(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = stringToImageVector(categoryIcon),
                 contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier.run { size(40.dp) }
+                modifier = Modifier.run { size(20.dp) }
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(text = gear.name, fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White)
-                Text(text = locationName,
-                    fontSize = 14.sp,
-                    color = Color.White)
-            }
+            Text(text = gear.name, fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White)
+            Spacer(modifier = Modifier.width(16.dp).weight(1f))
+            Text(text = locationName,
+                fontSize = 14.sp,
+                color = Color.White)
         }
     }
 }

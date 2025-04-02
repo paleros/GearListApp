@@ -7,9 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.gearlistapp.GearApplication.Companion.locationRepository
 import com.example.gearlistapp.domain.usecases.location.LocationUseCases
-import com.example.gearlistapp.ui.model.CategoryUi
 import com.example.gearlistapp.ui.model.LocationUi
-import com.example.gearlistapp.ui.model.asCategoryUi
 import com.example.gearlistapp.ui.model.asLocation
 import com.example.gearlistapp.ui.model.asLocationUi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -101,7 +99,7 @@ class LocationViewModel(
     suspend fun getById(id: Int): LocationUi? {
         return try {
             locationOperations.load(id).getOrNull()?.asLocationUi()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

@@ -7,31 +7,42 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
+import com.example.gearlistapp.data.entities.CategoryEntity
+import com.example.gearlistapp.data.entities.LocationEntity
 import com.example.gearlistapp.data.model.Gear
+import com.example.gearlistapp.presentation.screens.stringToImageVector
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
+import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.common.ColoredIconBoxText
 import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
+import com.example.gearlistapp.ui.model.asCategory
+import com.example.gearlistapp.ui.model.asLocation
 
 /**
  * A felszereles reszletezo dialogus
@@ -43,25 +54,44 @@ import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 @Composable
 fun GearDetailDialog(
     gear: Gear,
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     onDismiss: () -> Unit,
     onDelete: (Int) -> Unit,
     onEdit: (Gear) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
+    var category by remember { mutableStateOf<CategoryEntity?>(null) }
+    var location by remember { mutableStateOf<LocationEntity?>(null) }
+    var locationName by remember { mutableStateOf("") }
+
+    LaunchedEffect(gear.categoryId) {
+        category = categoryViewModel.getById(gear.categoryId)?.asCategory()?.asEntity()
+    }
+    LaunchedEffect(gear.locationId) {
+        location = locationViewModel.getById(gear.locationId)?.asLocation()?.asEntity()
+        locationName = location?.name ?: ""
+    }
+
+    val categoryColor = Color(category?.color ?: -7829368)
+    val categoryName = category?.name ?: ""
+    val categoryIcon = category?.iconName ?: "Icons.Default.Star"
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = gear.name, fontSize = 20.sp, fontWeight = FontWeight.Bold) }, //TODO a hatter színe lehetne a category
+        title = { Text(text = gear.name, fontSize = 20.sp, fontWeight = FontWeight.Bold) },
         text = {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = stringResource(id = R.string.category) + ":",
                     fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 ColoredIconBoxText(
-                    text = "${gear.categoryId}",
-                    icon = Icons.Default.Star,
-                    backgroundColor = MaterialTheme.colorScheme.secondary,
-                    textColor = MaterialTheme.colorScheme.onSecondary)             //TODO megcsinalni a kategóriát
+                    text = categoryName,
+                    icon = stringToImageVector(categoryIcon),
+                    backgroundColor = categoryColor,
+                    textColor = Color.White)
 
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = stringResource(id = R.string.description) + ":",
@@ -69,9 +99,12 @@ fun GearDetailDialog(
                 Text(text = gear.description)
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = stringResource(id = R.string.location) + ":",
-                    fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                Text(text = "${gear.categoryId}")       //TODO megcsinalni a helyet
+                Row {
+                    Text(text = stringResource(id = R.string.location) + ":",
+                        fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(text = locationName)
+                }
             }
         },
         confirmButton = {

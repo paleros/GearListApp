@@ -102,7 +102,7 @@ class CategoryViewModel(
     suspend fun getById(id: Int): CategoryUi? {
         return try {
             categoryOperations.load(id).getOrNull()?.asCategoryUi()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

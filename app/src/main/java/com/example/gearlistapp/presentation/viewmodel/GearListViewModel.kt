@@ -5,19 +5,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.gearlistapp.GearApplication
 import com.example.gearlistapp.GearApplication.Companion.gearRepository
-import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.ui.model.GearUi
-import com.example.gearlistapp.data.entities.LocationEntity
 import com.example.gearlistapp.domain.usecases.gear.GearUseCases
-import com.example.gearlistapp.ui.model.CategoryUi
-import com.example.gearlistapp.ui.model.asCategoryUi
 import com.example.gearlistapp.ui.model.asGear
 import com.example.gearlistapp.ui.model.asGearUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 sealed class GearListState {
@@ -103,7 +97,7 @@ class GearViewModel(
     suspend fun getById(id: Int): GearUi? {
         return try {
             gearOperations.load(id).getOrNull()?.asGearUi()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
