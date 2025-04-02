@@ -11,6 +11,7 @@ import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.ui.model.GearUi
 import com.example.gearlistapp.data.entities.LocationEntity
 import com.example.gearlistapp.domain.usecases.gear.GearUseCases
+import com.example.gearlistapp.ui.model.asGear
 import com.example.gearlistapp.ui.model.asGearUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -86,9 +87,30 @@ class GearViewModel(
      * A felszereles torlese
      * @param id a felszereles azonositoja
      */
-    fun deleteGear(id: Int) {
+    fun delete(id: Int) {
         viewModelScope.launch {
             gearOperations.delete(id)
+            loadGears()
+        }
+    }
+
+    /**
+     * A felszereles elmentese
+     * @param name a felszereles neve
+     * @param description a felszereles leirasa
+     * @param categoryId a felszereles kategoria azonositoja
+     * @param locationId a felszereles helyszin azonositoja
+     */
+    fun add(name: String, description: String, categoryId: Int, locationId: Int) {
+        viewModelScope.launch {
+            val newGear = GearUi(
+                name = name,
+                description = description,
+                categoryId = categoryId,
+                locationId = locationId
+            )
+            gearOperations.save(newGear.asGear())
+            loadGears()
         }
     }
 }

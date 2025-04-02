@@ -3,6 +3,7 @@ package com.example.gearlistapp.navigation
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,14 +11,23 @@ import androidx.navigation.compose.rememberNavController
 import com.example.gearlistapp.presentation.screens.GearsHomeScreen
 import com.example.gearlistapp.presentation.screens.HomeScreen
 import com.example.gearlistapp.presentation.screens.TemplatesHomeScreen
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
+import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 
 /**
  * A navigacios grafot reprezentalo komponens.
+ * @param gearViewModel a felszerelesekhez tartozo ViewModel
+ * @param categoryViewModel a kategoriakhoz tartozo ViewModel
+ * @param locationViewModel a helyszinekhez tartozo ViewModel
  * @param navController a navigacios controller
  * @param modifier a modifier
  */
 @Composable
 fun NavGraph(
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     navController: NavHostController = rememberNavController(),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -25,8 +35,19 @@ fun NavGraph(
     NavHost(navController = navController,
         startDestination = Screen.HomeScreen.route,
         modifier = modifier) {
-        composable(Screen.HomeScreen.route) {HomeScreen() }
-        composable(Screen.GearsHomeScreen.route) {GearsHomeScreen() }
-        composable(Screen.TemplatesHomeScreen.route) {TemplatesHomeScreen() }
+        composable(Screen.HomeScreen.route) {HomeScreen(
+                                                            categoryViewModel = categoryViewModel,
+                                                            gearViewModel = gearViewModel,
+                                                            locationViewModel = locationViewModel,
+        ) }
+        composable(Screen.GearsHomeScreen.route) {GearsHomeScreen(
+                                                            categoryViewModel = categoryViewModel,
+                                                            gearViewModel = gearViewModel,
+                                                            locationViewModel = locationViewModel,) }
+        composable(Screen.TemplatesHomeScreen.route) {TemplatesHomeScreen(
+                                                            categoryViewModel = categoryViewModel,
+                                                            gearViewModel = gearViewModel,
+                                                            locationViewModel = locationViewModel,
+        ) }
     }
 }

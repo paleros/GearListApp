@@ -35,13 +35,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import com.example.gearlistapp.GearApplication.Companion.gearRepository
-import com.example.gearlistapp.data.model.Gear
-import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 import com.example.gearlistapp.ui.model.asGearEntity
 import androidx.compose.material3.Icon
 import com.example.gearlistapp.presentation.dialogs.GearCreateDialog
 import com.example.gearlistapp.presentation.dialogs.GearDetailDialog
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.model.GearUi
 import com.example.gearlistapp.ui.model.asGear
 import kotlinx.coroutines.launch
@@ -49,10 +48,14 @@ import kotlinx.coroutines.launch
 /**
  * A felszereles lista megjelenitese
  * @param gearViewModel a felszereles viewmodelje
+ * @param categoryViewModel a kategoria viewmodelje
+ * @param locationViewModel a helyszin viewmodelje
  */
 @Composable
 fun GearListScreen(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory)
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory)
 ) {
 
 
@@ -63,7 +66,6 @@ fun GearListScreen(
     var showAddDialog by remember { mutableStateOf(false) }
     var selectedGear by remember { mutableStateOf<GearUi?>(null) }
 
-    //TODO automatikus frissitese a lista megjelenesnek
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -135,10 +137,13 @@ fun GearListScreen(
 
     if (showAddDialog) {
         GearCreateDialog(
+            categoryViewModel = categoryViewModel,
+            gearViewModel = gearViewModel,
+            locationViewModel = locationViewModel,
             onDismiss = { showAddDialog = false },
             onSave = { name, description, categoryId, locationId ->
                 coroutineScope.launch {
-                    saveToDatabase(name, description, categoryId, locationId)
+                    gearViewModel.add(name, description, categoryId, locationId)
                     showAddDialog = false
                 }
             }
@@ -150,7 +155,7 @@ fun GearListScreen(
             gear = gear.asGear(),
             onDismiss = { selectedGear = null },
             onDelete = { id ->
-                gearViewModel.deleteGear(id)
+                gearViewModel.delete(id)
                 selectedGear = null
             },
             onEdit = { gearToEdit ->
@@ -159,25 +164,5 @@ fun GearListScreen(
             }
         )
     }
-}
-
-/**
- * Felszereles mentese az adatbazisba
- * @param name a felszereles neve
- * @param description a felszereles leirasa
- * @param categoryId a kategori id
- * @param locationId a helyszin id
- */
-suspend fun saveToDatabase(name: String, description: String, categoryId: Int, locationId: Int) {
-    val newItem = Gear(
-        name = name,
-        description = description,
-        categoryId = categoryId,
-        locationId = locationId,
-        id = 0
-    )
-    val gearOperations = GearUseCases(gearRepository)
-
-    gearOperations.save(newItem)
 }
 

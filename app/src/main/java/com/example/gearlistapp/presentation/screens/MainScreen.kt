@@ -36,6 +36,7 @@ import com.example.gearlistapp.presentation.dialogs.AboutDialog
 import com.example.gearlistapp.presentation.dialogs.CategoryListDialog
 import com.example.gearlistapp.presentation.dialogs.LocationListDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
+import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.common.BottomNavigationBar
 import com.example.gearlistapp.ui.common.TopAppBar
@@ -46,6 +47,11 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun MainScreen() {
+
+    val gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory)
+    val categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory)
+    val locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory)
+
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -54,7 +60,11 @@ fun MainScreen() {
         drawerState = drawerState,
         drawerContent = {
             /** Bal oldali navigacios menu */
-            DrawerContent {
+            DrawerContent(
+                gearViewModel = gearViewModel,
+                categoryViewModel = categoryViewModel,
+                locationViewModel = locationViewModel,
+            ) {
                 scope.launch { drawerState.close() }
             }
         }
@@ -63,23 +73,39 @@ fun MainScreen() {
             topBar = { TopAppBar(navController, scope, drawerState) },
             bottomBar = { BottomNavigationBar(navController) }
         ) { innerPadding ->
-            NavGraph(navController = navController, modifier = Modifier.padding(innerPadding))
+            NavGraph(navController = navController,
+                modifier = Modifier.padding(innerPadding),
+                gearViewModel = gearViewModel,
+                categoryViewModel = categoryViewModel,
+                locationViewModel = locationViewModel
+            )
         }
     }
 }
 
 /**
  * A bal oldali navigacios menu tartalma.
+ * @param gearViewModel a felszerelesekhez tartozo ViewModel
+ * @param categoryViewModel a kategoriakhoz tartozo ViewModel
+ * @param locationViewModel a helyszinekhez tartozo ViewModel
  * @param onClose a menu bezarasahoz
  */
 @Composable
-fun DrawerContent(onClose: () -> Unit) {
+fun DrawerContent(
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    onClose: () -> Unit
+) {
+    gearViewModel.loadGears()
+    categoryViewModel.loadCategories()
+    locationViewModel.loadLocations()
+
     var showCategoryDialog by remember { mutableStateOf(false) }
     var showLocationDialog by remember { mutableStateOf(false) }
     var showExportDialog by remember { mutableStateOf(false) }
     var showImportDialog by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
-
 
     Column(
         modifier = Modifier
@@ -110,13 +136,17 @@ fun DrawerContent(onClose: () -> Unit) {
 
     if (showCategoryDialog) {
         CategoryListDialog(
-            categoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+            categoryViewModel = categoryViewModel,
+            gearViewModel = gearViewModel,
+            locationViewModel = locationViewModel,
             onDismiss = { showCategoryDialog = false }
         )
     }
     if (showLocationDialog) {
         LocationListDialog(
-            locationViewModel = viewModel(factory = LocationViewModel.Factory),
+            categoryViewModel = categoryViewModel,
+            gearViewModel = gearViewModel,
+            locationViewModel = locationViewModel,
             onDismiss = { showLocationDialog = false }
         )
     }

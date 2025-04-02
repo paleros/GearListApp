@@ -68,6 +68,7 @@ class CategoryViewModel(
                 _state.value = CategoryListState.Error(e)
             }
         }
+        loadCategories()
     }
 
     /**
@@ -76,7 +77,7 @@ class CategoryViewModel(
      * @param color a kategoria szine
      * @param iconRes a kategoria ikonja
      */
-    fun save(name: String, color: Int, iconRes: ImageVector) {
+    fun add(name: String, color: Int, iconRes: ImageVector) {
         viewModelScope.launch {
             try {
                 val category = CategoryUi(
@@ -89,5 +90,6 @@ class CategoryViewModel(
                 _state.value = CategoryListState.Error(e)
             }
         }
+        loadCategories()
     }
 }

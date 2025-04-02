@@ -56,9 +56,6 @@ fun TopAppBar(navController: NavController,
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentScreen = homeScreens.find { it.route == navBackStackEntry.value?.destination?.route } ?: homeScreens.first()
 
-    var showCategoryDialog by remember { mutableStateOf(false) }
-    var showLocationDialog by remember { mutableStateOf(false) }
-
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -95,20 +92,6 @@ fun TopAppBar(navController: NavController,
             }
         }
     )
-
-    if (showCategoryDialog) {
-        CategoryListDialog(
-            categoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-            onDismiss = { showCategoryDialog = false }
-        )
-    }
-
-    if (showLocationDialog) {
-        LocationListDialog(
-            locationViewModel = viewModel(factory = LocationViewModel.Factory),
-            onDismiss = { showLocationDialog = false }
-        )
-    }
 }
 
 /**

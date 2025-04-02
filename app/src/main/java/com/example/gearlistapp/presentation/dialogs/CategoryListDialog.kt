@@ -35,18 +35,24 @@ import com.example.gearlistapp.R
 import com.example.gearlistapp.presentation.screens.CategoryItem
 import com.example.gearlistapp.presentation.viewmodel.CategoryListState
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
+import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.model.asCategory
 import com.example.gearlistapp.ui.model.toUiText
 import kotlinx.coroutines.launch
 
 /**
  * Kategoria lista dialogus
+ * @param gearViewModel a felszereles viewmodel
  * @param categoryViewModel a kategoria viewmodel
+ * @param locationViewModel a helyszin viewmodel
  * @param onDismiss a dialogus bezarasa
  */
 @Composable
 fun CategoryListDialog(
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
     categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     onDismiss: () -> Unit,
 ){
     val categoryList = categoryViewModel.state.collectAsStateWithLifecycle().value
@@ -55,7 +61,6 @@ fun CategoryListDialog(
     var showAddDialog by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    //TODO automatikus frissitese a lista megjelenesnek
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -126,7 +131,7 @@ fun CategoryListDialog(
             onDismiss = { showAddDialog = false },
             onSave = { name, color, iconRes ->
                 coroutineScope.launch {
-                    categoryViewModel.save(name, color, iconRes)
+                    categoryViewModel.add(name, color, iconRes)
                     showAddDialog = false
                 }
             }

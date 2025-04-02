@@ -7,22 +7,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 
 /**
  * A felszerelesek fokepernyojet reprezentalo komponens.
- * @param navController a navigacios controller
- * @param viewModel a felszerelesekhez tartozo ViewModel
+ * @param categoryViewModel a kategoriakhoz tartozo ViewModel
+ * @param gearViewModel a felszerelesekhez tartozo ViewModel
+ * @param locationViewModel a helyszinekhez tartozo ViewModel
  */
 @Composable
-fun GearsHomeScreen(viewModel: GearViewModel = viewModel(factory = GearViewModel.Factory)) {
+fun GearsHomeScreen(
+    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+) {
 
     Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        GearListScreen()
+        GearListScreen(
+            categoryViewModel = categoryViewModel,
+            gearViewModel = gearViewModel,
+            locationViewModel = locationViewModel,)
     }
 
 }

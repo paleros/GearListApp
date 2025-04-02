@@ -31,6 +31,9 @@ class LocationViewModel(
     private val _state = MutableStateFlow<LocationListState>(LocationListState.Loading)
     val state = _state.asStateFlow()
 
+    /**
+     * Helyszin lista betoltese
+     */
     fun loadLocations() {
         viewModelScope.launch {
             try {
@@ -67,13 +70,14 @@ class LocationViewModel(
                 _state.value = LocationListState.Error(e)
             }
         }
+        loadLocations()
     }
 
     /**
      * Helyszin elmentese
      * @param name a helyszin neve
      */
-    fun save(name: String) {
+    fun add(name: String) {
         viewModelScope.launch {
             try {
                 val location = LocationUi(
@@ -84,5 +88,6 @@ class LocationViewModel(
                 _state.value = LocationListState.Error(e)
             }
         }
+        loadLocations()
     }
-    }
+}

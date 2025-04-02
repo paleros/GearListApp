@@ -32,6 +32,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.presentation.screens.LocationItem
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
+import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationListState
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.model.asLocation
@@ -40,11 +42,15 @@ import kotlinx.coroutines.launch
 
 /**
  * A helyszin lista dialogus.
+ * @param gearViewModel a felszereles viewmodelje
+ * @param categoryViewModel a kategoria viewmodelje
  * @param locationViewModel a helyszin viewmodelje
  * @param onDismiss a dialogus bezarasahoz
  */
 @Composable
 fun LocationListDialog(
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     onDismiss: () -> Unit,
 ){
@@ -54,7 +60,6 @@ fun LocationListDialog(
     var showAddDialog by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    //TODO automatikus frissitese a lista megjelenesnek
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -125,7 +130,7 @@ fun LocationListDialog(
             onDismiss = { showAddDialog = false },
             onSave = { name ->
                 coroutineScope.launch {
-                    locationViewModel.save(name)
+                    locationViewModel.add(name)
                     showAddDialog = false
                 }
             }
