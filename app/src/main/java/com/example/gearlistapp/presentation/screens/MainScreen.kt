@@ -3,13 +3,13 @@ package com.example.gearlistapp.presentation.screens
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -35,8 +35,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.gearlistapp.R
 import com.example.gearlistapp.navigation.NavGraph
 import com.example.gearlistapp.presentation.dialogs.AboutDialog
-import com.example.gearlistapp.presentation.dialogs.CategoryListDialog
-import com.example.gearlistapp.presentation.dialogs.LocationListDialog
+import com.example.gearlistapp.presentation.dialogs.category.CategoryListDialog
+import com.example.gearlistapp.presentation.dialogs.location.LocationListDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel

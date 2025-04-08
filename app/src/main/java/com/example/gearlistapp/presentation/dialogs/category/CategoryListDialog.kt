@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.dialogs
+package com.example.gearlistapp.presentation.dialogs.category
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -31,30 +31,30 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
-import com.example.gearlistapp.presentation.screens.LocationItem
+import com.example.gearlistapp.presentation.screens.category.CategoryItem
+import com.example.gearlistapp.presentation.viewmodel.CategoryListState
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
-import com.example.gearlistapp.presentation.viewmodel.LocationListState
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
-import com.example.gearlistapp.ui.model.asLocation
+import com.example.gearlistapp.ui.model.asCategory
 import com.example.gearlistapp.ui.model.toUiText
 import kotlinx.coroutines.launch
 
 /**
- * A helyszin lista dialogus.
- * @param gearViewModel a felszereles viewmodelje
- * @param categoryViewModel a kategoria viewmodelje
- * @param locationViewModel a helyszin viewmodelje
- * @param onDismiss a dialogus bezarasahoz
+ * Kategoria lista dialogus
+ * @param gearViewModel a felszereles viewmodel
+ * @param categoryViewModel a kategoria viewmodel
+ * @param locationViewModel a helyszin viewmodel
+ * @param onDismiss a dialogus bezarasa
  */
 @Composable
-fun LocationListDialog(
+fun CategoryListDialog(
     gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
     categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     onDismiss: () -> Unit,
 ){
-    val locationList = locationViewModel.state.collectAsStateWithLifecycle().value
+    val categoryList = categoryViewModel.state.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
     var showAddDialog by remember { mutableStateOf(false) }
@@ -64,7 +64,7 @@ fun LocationListDialog(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                locationViewModel.loadLocations()
+                categoryViewModel.loadCategories()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -75,30 +75,30 @@ fun LocationListDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(id = R.string.locations)) },
+        title = { Text(text = stringResource(id = R.string.gear_categories)) },
         text = {
-            when (locationList) {
-                is LocationListState.Loading -> CircularProgressIndicator(
+            when (categoryList) {
+                is CategoryListState.Loading -> CircularProgressIndicator(
                     color = MaterialTheme.colorScheme.secondaryContainer
                 )
 
-                is LocationListState.Error -> Text(
-                    text = locationList.error.toUiText().asString(context)
+                is CategoryListState.Error -> Text(
+                    text = categoryList.error.toUiText().asString(context)
                 )
 
-                is LocationListState.Result -> {
-                    if (locationList.locationList.isEmpty()) {
-                        Text(text = stringResource(id = R.string.text_empty_location_list))
+                is CategoryListState.Result -> {
+                    if (categoryList.categoryList.isEmpty()) {
+                        Text(text = stringResource(id = R.string.text_empty_category_list))
                     } else {
                         Column {
                             LazyColumn(
                                 modifier = Modifier.fillMaxHeight()
                             ) {
-                                items(locationList.locationList, key = { location -> location.id }) { location ->
-                                    LocationItem(
-                                        location.asLocation().asEntity(),
+                                items(categoryList.categoryList, key = { category -> category.id }) { category ->
+                                    CategoryItem(
+                                        category.asCategory().asEntity(),
                                         onDelete = { id ->
-                                            locationViewModel.delete(location.id)
+                                            categoryViewModel.delete(category.id)
                                         },
                                     )
                                 }
@@ -126,14 +126,15 @@ fun LocationListDialog(
     )
 
     if (showAddDialog) {
-        LocationCreateDialog(
+        CategoryCreateDialog(
             onDismiss = { showAddDialog = false },
-            onSave = { name ->
+            onSave = { name, color, iconRes ->
                 coroutineScope.launch {
-                    locationViewModel.add(name)
+                    categoryViewModel.add(name, color, iconRes)
                     showAddDialog = false
                 }
             }
         )
     }
 }
+

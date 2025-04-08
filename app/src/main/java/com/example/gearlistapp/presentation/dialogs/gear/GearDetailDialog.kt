@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.dialogs
+package com.example.gearlistapp.presentation.dialogs.gear
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,7 +35,7 @@ import com.example.gearlistapp.R
 import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.LocationEntity
 import com.example.gearlistapp.data.model.Gear
-import com.example.gearlistapp.presentation.screens.stringToImageVector
+import com.example.gearlistapp.presentation.screens.gear.stringToImageVector
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel

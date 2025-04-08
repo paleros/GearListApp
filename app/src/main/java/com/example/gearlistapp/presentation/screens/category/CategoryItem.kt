@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.screens
+package com.example.gearlistapp.presentation.screens.category
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gearlistapp.data.entities.CategoryEntity
+import com.example.gearlistapp.presentation.screens.gear.stringToImageVector
 import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 
 /**

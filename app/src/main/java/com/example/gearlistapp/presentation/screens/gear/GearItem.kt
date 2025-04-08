@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.screens
+package com.example.gearlistapp.presentation.screens.gear
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

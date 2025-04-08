@@ -1,8 +1,9 @@
-package com.example.gearlistapp.presentation.screens
+package com.example.gearlistapp.presentation.screens.gear
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +27,11 @@ import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.ui.model.toUiText
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
@@ -37,8 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import com.example.gearlistapp.ui.model.asGearEntity
 import androidx.compose.material3.Icon
-import com.example.gearlistapp.presentation.dialogs.GearCreateDialog
-import com.example.gearlistapp.presentation.dialogs.GearDetailDialog
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
+import com.example.gearlistapp.presentation.dialogs.FilterDialog
+import com.example.gearlistapp.presentation.dialogs.gear.GearCreateDialog
+import com.example.gearlistapp.presentation.dialogs.gear.GearDetailDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.model.GearUi
@@ -51,6 +59,7 @@ import kotlinx.coroutines.launch
  * @param categoryViewModel a kategoria viewmodelje
  * @param locationViewModel a helyszin viewmodelje
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GearListScreen(
     gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
@@ -66,11 +75,20 @@ fun GearListScreen(
     var showAddDialog by remember { mutableStateOf(false) }
     var selectedGear by remember { mutableStateOf<GearUi?>(null) }
 
+    var searchText by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf<String>("null") }
+    var selectedLocation by remember { mutableStateOf<String>("null") }
+    var sortOrder by remember { mutableStateOf(SortOrder.NameAsc) }
+    var showSearchDialog by remember { mutableStateOf(false) }
+    var showFilterDialog by remember { mutableStateOf(false) }
+
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 gearViewModel.loadGears()
+                categoryViewModel.loadCategories()
+                locationViewModel.loadLocations()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -79,8 +97,55 @@ fun GearListScreen(
         }
     }
 
+    /** Szures, rendezes es kereses */
+    val filteredAndSortedGearList = gearList.let {
+        when (it) {
+            is GearListState.Result -> {
+                it.gearList
+                    .filter { gear ->
+                        gear.name.contains(searchText, ignoreCase = true) &&
+                                (gear.categoryId.toString() == selectedCategory || "null" == selectedCategory) &&
+                                (gear.locationId.toString()== selectedLocation || "null" == selectedLocation)
+                    }
+                    .sortedWith { gear1, gear2 ->
+                        when (sortOrder) {
+                            SortOrder.NameAsc -> gear1.name.compareTo(gear2.name)
+                            SortOrder.NameDesc -> gear2.name.compareTo(gear1.name)
+                        }
+                    }
+            }
+            else -> emptyList()
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { "" },
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                    .fillMaxHeight(0.1f),
+                actions = {
+                    /** Kereses ikon */
+                    IconButton(onClick = { showSearchDialog = true }) {
+                        Icon(Icons.Default.Search, contentDescription = "Search")
+                    }
+                    /** Filter ikon */
+                    IconButton(onClick = { showFilterDialog = true }) {
+                        Icon(Icons.Default.FilterList, contentDescription = "Filter")
+                    }
+                    /** Renderzes ikon */
+                    IconButton(onClick = {
+                        sortOrder = if
+                                (sortOrder == SortOrder.NameAsc) SortOrder.NameDesc
+                        else
+                            SortOrder.NameAsc
+                    }) {
+                        Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = "Sort")
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             LargeFloatingActionButton(
                 onClick = { showAddDialog = true },
@@ -115,7 +180,7 @@ fun GearListScreen(
                 )
 
                 is GearListState.Result -> {
-                    if (gearList.gearList.isEmpty()) {
+                    if (filteredAndSortedGearList.isEmpty()) {
                         Text(text = stringResource(id = R.string.text_empty_gear_list))
                     } else {
                         Column {
@@ -123,7 +188,7 @@ fun GearListScreen(
                                 modifier = Modifier
                                     .fillMaxSize()
                             ) {
-                                items(gearList.gearList, key = { gear -> gear.id }) { gear ->
+                                items(filteredAndSortedGearList, key = { gear -> gear.id }) { gear ->
                                     GearItem(gear.asGearEntity(),
                                         onClick = { selectedGear = gear })
                                 }
@@ -150,6 +215,24 @@ fun GearListScreen(
         )
     }
 
+    if (showFilterDialog) {
+        FilterDialog(
+            categoryViewModel = categoryViewModel,
+            gearViewModel = gearViewModel,
+            locationViewModel = locationViewModel,
+            onDismiss = { showFilterDialog = false },
+            onCategorySelected = { selectedCategory = it.toString() },
+            onLocationSelected = { selectedLocation = it.toString() },
+            onDeleteFilters = {
+                selectedCategory = "null"
+                selectedLocation = "null"
+                showFilterDialog = false
+            },
+            previousCategory = selectedCategory,
+            previousLocation = selectedLocation,
+        )
+    }
+
     selectedGear?.let {gear ->
         GearDetailDialog(
             gear = gear.asGear(),
@@ -166,3 +249,10 @@ fun GearListScreen(
     }
 }
 
+/**
+ * A felszerelesek rendezesi iranya
+ */
+enum class SortOrder {
+    NameAsc,
+    NameDesc
+}

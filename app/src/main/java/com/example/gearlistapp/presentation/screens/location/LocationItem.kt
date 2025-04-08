@@ -1,13 +1,15 @@
-package com.example.gearlistapp.presentation.screens
+package com.example.gearlistapp.presentation.screens.location
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Room
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -27,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gearlistapp.data.entities.LocationEntity
+import com.example.gearlistapp.presentation.screens.gear.stringToImageVector
 import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 
 /**
@@ -51,7 +54,13 @@ fun LocationItem(location: LocationEntity,
             modifier = Modifier.padding(5.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(10.dp))
+            Icon(
+                imageVector = Icons.Default.Room,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.run { size(20.dp) }
+            )
+            Spacer(modifier = Modifier.width(5.dp))
             Text(text = location.name, fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White)

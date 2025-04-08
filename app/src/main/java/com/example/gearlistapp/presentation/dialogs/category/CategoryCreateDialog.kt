@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.dialogs
+package com.example.gearlistapp.presentation.dialogs.category
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

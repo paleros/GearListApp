@@ -106,4 +106,52 @@ class CategoryViewModel(
             null
         }
     }
+
+    /**
+     * A kategoria neve id alapjan
+     * @param id a kategoria id-je
+     * @return a kategoria neve
+     */
+    fun getNameById(id: Int, onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            val name = try {
+                categoryOperations.load(id).getOrNull()?.name
+            } catch (_: Exception) {
+                null
+            }
+            onResult(name.toString())
+        }
+    }
+
+    /**
+     * A kategoria ikon neve id alapjan
+     * @param id a kategoria id-je
+     * @return a kategoria ikon neve
+     */
+    fun getIconNameById(id: Int, onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            val icon = try {
+                categoryOperations.load(id).getOrNull()?.iconName
+            } catch (_: Exception) {
+                null
+            }
+            onResult(icon.toString())
+        }
+    }
+
+    /**
+     * A kategoria szine id alapjan
+     * @param id a kategoria id-je
+     * @return a kategoria szine
+     */
+    fun getColorById(id: Int, onResult: (Int) -> Unit) {
+        viewModelScope.launch {
+            val color = try {
+                categoryOperations.load(id).getOrNull()?.color
+            } catch (_: Exception) {
+                null
+            }
+            onResult(color.toString().toInt())
+        }
+    }
 }

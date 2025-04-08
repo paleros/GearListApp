@@ -103,4 +103,20 @@ class LocationViewModel(
             null
         }
     }
+
+    /**
+     * Helyszin neve id alapjan
+     * @param id a helyszin id-je
+     * @param onResult a helyszin neve
+     */
+    fun getNameById(id: Int, onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            val name = try {
+                locationOperations.load(id).getOrNull()?.name
+            } catch (_: Exception) {
+                null
+            }
+            onResult(name.toString())
+        }
+    }
 }

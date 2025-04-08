@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -72,16 +71,6 @@ fun TopAppBar(navController: NavController,
                     tint = MaterialTheme.colorScheme.onPrimary)
             }
         },
-        /** A kereso ikon. */
-        actions = {
-            IconButton(onClick = { /*TODO keresés */ }) {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = "Search",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-        }
     )
 }
 

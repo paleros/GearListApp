@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.dialogs
+package com.example.gearlistapp.presentation.dialogs.location
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,11 +1,6 @@
-package com.example.gearlistapp.presentation.screens
-
-
-import androidx.compose.foundation.layout.*
+package com.example.gearlistapp.presentation.screens.gear
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
@@ -24,15 +19,9 @@ fun GearsHomeScreen(
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
 ) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        GearListScreen(
-            categoryViewModel = categoryViewModel,
-            gearViewModel = gearViewModel,
-            locationViewModel = locationViewModel,)
-    }
+    GearListScreen(
+        categoryViewModel = categoryViewModel,
+        gearViewModel = gearViewModel,
+        locationViewModel = locationViewModel,)
 
 }
