@@ -29,24 +29,35 @@ import com.example.gearlistapp.ui.common.CategoryDropdown
 import com.example.gearlistapp.ui.common.LocationDropdown
 
 /**
- * A felszereles letrehozo dialogus
+ * A felszerelest szerkeszto dialogus
+ * @param gearId a felszereles azonositoja
+ * @param currentName a korabi nev
+ * @param currentDescription a korabbi leiras
+ * @param currentCategoryId a korabbi kategoria azonosito
+ * @param currentLocationId a korabbi helyszin azonosito
  * @param gearViewModel a felszereles viewmodelje
  * @param categoryViewModel a kategoria viewmodelje
  * @param locationViewModel a helyszin viewmodelje
- * @param onDismiss a dialogus bezarasa
- * @param onSave a felszereles elmentese
+ * @param onDismiss a bezaras
+ * @param onEdit a szerkesztes
  */
 @Composable
-fun GearCreateDialog(
+fun GearEditDialog(
+    gearId: Int,
+    currentName: String,
+    currentDescription: String,
+    currentCategoryId: Int,
+    currentLocationId: Int,
     gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
     categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
-    onDismiss: () -> Unit, onSave: (String, String, Int, Int) -> Unit) {
-
-    var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var categoryId by remember { mutableStateOf("") }
-    var locationId by remember { mutableStateOf("") }
+    onDismiss: () -> Unit,
+    onEdit: (Int, String, String, Int, Int) -> Unit
+) {
+    var name by remember { mutableStateOf(currentName) }
+    var description by remember { mutableStateOf(currentDescription) }
+    var categoryId by remember { mutableStateOf(currentCategoryId.toString()) }
+    var locationId by remember { mutableStateOf(currentLocationId.toString()) }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -63,7 +74,7 @@ fun GearCreateDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(id = R.string.add_new_gear)) },
+        title = { Text(text = stringResource(id = R.string.edit_gear)) },
         text = {
             Column {
                 TextField(
@@ -86,6 +97,7 @@ fun GearCreateDialog(
                     gearViewModel = gearViewModel,
                     locationViewModel = locationViewModel,
                     onCategorySelected = { categoryId = it.toString() },
+                    previousCategory = currentCategoryId.toString()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 LocationDropdown(
@@ -93,11 +105,20 @@ fun GearCreateDialog(
                     gearViewModel = gearViewModel,
                     locationViewModel = locationViewModel,
                     onLocationSelected = { locationId = it.toString() },
+                    previousLocation = currentLocationId.toString()
                 )
             }
         },
         confirmButton = {
-            TextButton(onClick = { onSave(name, description, categoryId.toInt(), locationId.toInt()) }) {
+            TextButton(onClick = {
+                onEdit(
+                    gearId,
+                    name,
+                    description,
+                    categoryId.toInt(),
+                    locationId.toInt()
+                )
+            }) {
                 Text(stringResource(id = R.string.save))
             }
         },

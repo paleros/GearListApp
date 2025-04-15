@@ -3,7 +3,6 @@ package com.example.gearlistapp.presentation.screens
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -41,7 +40,7 @@ import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.common.BottomNavigationBar
-import com.example.gearlistapp.ui.common.TopAppBar
+import com.example.gearlistapp.ui.common.MyTopAppBar
 import kotlinx.coroutines.launch
 
 /**
@@ -72,7 +71,7 @@ fun MainScreen() {
         }
     ) {
         Scaffold(
-            topBar = { TopAppBar(navController, scope, drawerState) },
+            topBar = { MyTopAppBar(navController, scope, drawerState) },
             bottomBar = { BottomNavigationBar(navController) }
         ) { innerPadding ->
             NavGraph(navController = navController,

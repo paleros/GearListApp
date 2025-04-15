@@ -43,4 +43,7 @@
     <string name="about_created_by">Created by Erős Pál\nContact: pal.eros@edu.bme.hu\n\nDeveloped as part of the\nBudapest University of Technology and Economics\nFaculty of Electrical Engineering and Informatics\nComputer Engineering, M.Sc.\nMobile Software Platforms\ncourse.</string>
     <string name="use">Use</string>
     <string name="delete_filters">Delete filters</string>
+    <string name="searching">Searching...</string>
+    <string name="search">Search...</string>
+    <string name="edit_gear">Edit gear</string>
 </resources>

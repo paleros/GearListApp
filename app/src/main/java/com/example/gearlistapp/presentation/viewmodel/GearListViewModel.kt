@@ -6,10 +6,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.gearlistapp.GearApplication.Companion.gearRepository
+import com.example.gearlistapp.data.model.Gear
 import com.example.gearlistapp.ui.model.GearUi
 import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 import com.example.gearlistapp.ui.model.asGear
 import com.example.gearlistapp.ui.model.asGearUi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -101,4 +103,32 @@ class GearViewModel(
             null
         }
     }
+
+    /**
+     * A felszereles frissitese
+     * @param gear a felszereles
+     */
+    fun update(gear: GearUi) {
+        viewModelScope.launch {
+            gearOperations.update(gear.asGear())
+            loadGears()
+        }
+    }
+
+    /**
+     * A felszereles id alapjan
+     * @param id a felszereles id-je
+     * @return a felszereles
+     */
+    fun getById(id: Int, onResult: (Gear?) -> Unit) {
+        viewModelScope.launch {
+            val gear = try {
+                gearOperations.load(id).getOrNull()
+            } catch (_: Exception) {
+                null
+            }
+            onResult(gear)
+        }
+    }
+
 }

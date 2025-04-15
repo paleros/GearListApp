@@ -40,9 +40,9 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar(navController: NavController,
-              scope: CoroutineScope,
-              drawerState: DrawerState) {
+fun MyTopAppBar(navController: NavController,
+                scope: CoroutineScope,
+                drawerState: DrawerState) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentScreen = homeScreens.find { it.route == navBackStackEntry.value?.destination?.route } ?: homeScreens.first()
 
@@ -80,7 +80,7 @@ fun TopAppBar(navController: NavController,
 @Preview
 @Composable
 fun TopAppBarPreview() {
-    TopAppBar(rememberNavController(),
+    MyTopAppBar(rememberNavController(),
         rememberCoroutineScope(),
         rememberDrawerState(DrawerValue.Closed)
     )

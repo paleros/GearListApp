@@ -21,11 +21,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
-import com.example.gearlistapp.presentation.dialogs.gear.CategoryDropdown
-import com.example.gearlistapp.presentation.dialogs.gear.LocationDropdown
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
+import com.example.gearlistapp.ui.common.CategoryDropdown
+import com.example.gearlistapp.ui.common.LocationDropdown
 
 /**
  * Filter beallitasat vegzo dialogus

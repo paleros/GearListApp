@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -46,32 +45,54 @@ import com.example.gearlistapp.ui.model.asLocation
 
 /**
  * A felszereles reszletezo dialogus
- * @param gear a felszereles
+ * @param gearId a felszereles azonositoja
+ * @param gearViewModel a felszereles viewmodelje
+ * @param categoryViewModel a kategoria viewmodelje
+ * @param locationViewModel a helyszin viewmodelje
  * @param onDismiss a dialogus bezarasa
  * @param onDelete a felszereles torlese
- * @param onEdit a felszereles szerkesztese
+ * @param onEdit a szerkesztes
  */
 @Composable
 fun GearDetailDialog(
-    gear: Gear,
+    gearId: Int,
     gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
     categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     onDismiss: () -> Unit,
     onDelete: (Int) -> Unit,
-    onEdit: (Gear) -> Unit
+    onEdit: (Int, String, String, Int, Int) -> Unit,
 ) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
 
     var category by remember { mutableStateOf<CategoryEntity?>(null) }
     var location by remember { mutableStateOf<LocationEntity?>(null) }
     var locationName by remember { mutableStateOf("") }
 
-    LaunchedEffect(gear.categoryId) {
-        category = categoryViewModel.getById(gear.categoryId)?.asCategory()?.asEntity()
+    var gear by remember { mutableStateOf<Gear?>(null) }
+
+    /**
+     * A felszereles kiirasanak frissitese
+     */
+    fun refreshGear() {
+        gearViewModel.getById(gearId) { result ->
+            if (result == null){
+                onDismiss()
+            }
+            gear = result
+        }
     }
-    LaunchedEffect(gear.locationId) {
-        location = locationViewModel.getById(gear.locationId)?.asLocation()?.asEntity()
+
+    LaunchedEffect(Unit) {
+        refreshGear()
+    }
+
+    LaunchedEffect(gear?.categoryId) {
+        category = categoryViewModel.getById(gear?.categoryId ?: 0)?.asCategory()?.asEntity()
+    }
+    LaunchedEffect(gear?.locationId) {
+        location = locationViewModel.getById(gear?.locationId ?: 0)?.asLocation()?.asEntity()
         locationName = location?.name ?: ""
     }
 
@@ -81,7 +102,7 @@ fun GearDetailDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = gear.name, fontSize = 20.sp, fontWeight = FontWeight.Bold) },
+        title = { Text(text = gear?.name ?: "", fontSize = 20.sp, fontWeight = FontWeight.Bold) },
         text = {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
@@ -96,7 +117,7 @@ fun GearDetailDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = stringResource(id = R.string.description) + ":",
                     fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                Text(text = gear.description)
+                Text(text = gear?.description ?: "")
 
                 Spacer(modifier = Modifier.height(8.dp))
                 Row {
@@ -119,13 +140,13 @@ fun GearDetailDialog(
                         tint = MaterialTheme.colorScheme.onPrimary)
                 }
                 IconButton(
-                    onClick = { showDialog = true },
+                    onClick = { showDeleteDialog = true },
                 ) {
                     Icon(Icons.Default.Delete,
                         contentDescription = "Delete",
                         tint = MaterialTheme.colorScheme.onPrimary)
                 }
-                IconButton(onClick = { onEdit(gear) }) {
+                IconButton(onClick = { showEditDialog = true }) {
                     Icon(Icons.Default.Edit,
                         contentDescription = "Edit",
                         tint = MaterialTheme.colorScheme.onPrimary)
@@ -134,29 +155,33 @@ fun GearDetailDialog(
         }
     )
 
-    if (showDialog) {
+    if (showDeleteDialog) {
         DeleteConfirmationDialog(
             onConfirm = {
-                onDelete(gear.id)
-                showDialog = false
+                onDelete(gear?.id ?: 0)
+                showDeleteDialog = false
             },
-            onDismiss = { showDialog = false }
+            onDismiss = { showDeleteDialog = false }
+        )
+    }
+
+    if (showEditDialog) {
+        GearEditDialog(
+            gearId = gear?.id ?: 0,
+            currentName = gear?.name ?: "",
+            currentDescription = gear?.description ?: "",
+            currentCategoryId = gear?.categoryId ?: 0,
+            currentLocationId = gear?.locationId ?: 0,
+            categoryViewModel = categoryViewModel,
+            gearViewModel = gearViewModel,
+            locationViewModel = locationViewModel,
+            onDismiss = { showEditDialog = false },
+            onEdit = { id, name, description, categoryId, locationId ->
+                    onEdit(id, name, description, categoryId, locationId)
+                    showEditDialog = false
+                    refreshGear()
+            }
         )
     }
 }
 
-/**
- * A felszereles reszletezo dialogus elozetes megjelenitese
- */
-@Composable
-@Preview
-fun GearDetailDialogPreview() {
-    GearDetailDialog(
-        gear = Gear(1, "Test Gear",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel leo quis libero mattis molestie.",
-            1, 1),
-        onDismiss = {},
-        onDelete = {},
-        onEdit = {}
-    )
-}
