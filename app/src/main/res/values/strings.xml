@@ -46,4 +46,5 @@
     <string name="searching">Searching...</string>
     <string name="search">Search...</string>
     <string name="edit_gear">Edit gear</string>
+    <string name="day">day</string>
 </resources>

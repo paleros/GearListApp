@@ -6,6 +6,7 @@ import com.example.gearlistapp.data.database.AppDatabase
 import com.example.gearlistapp.data.repository.CategoryRepository
 import com.example.gearlistapp.data.repository.LocationRepository
 import com.example.gearlistapp.data.repository.GearRepository
+import com.example.gearlistapp.data.repository.TemplateRepository
 
 /**
  * Az alkalmazás fo osztalya,
@@ -19,6 +20,7 @@ class GearApplication : Application() {
         lateinit var gearRepository: GearRepository
         lateinit var categoryRepository: CategoryRepository
         lateinit var locationRepository: LocationRepository
+        lateinit var templateRepository: TemplateRepository
     }
 
     override fun onCreate() {
@@ -32,5 +34,6 @@ class GearApplication : Application() {
         gearRepository = GearRepository(db.gearDao)
         categoryRepository = CategoryRepository(db.categoryDao)
         locationRepository = LocationRepository(db.locationDao)
+        templateRepository = TemplateRepository(db.templateDao)
     }
 }
