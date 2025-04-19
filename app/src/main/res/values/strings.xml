@@ -53,4 +53,7 @@
     <string name="duration">Duration</string>
     <string name="duration_day">Duration day</string>
     <string name="select_gears">Select gears</string>
+    <string name="days">days</string>
+    <string name="gear_list">Gear list</string>
+    <string name="edit_template">Edit template</string>
 </resources>

@@ -69,6 +69,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.mutableIntStateOf
+import com.example.gearlistapp.presentation.dialogs.template.TemplateDetailDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialog
 
 /**
@@ -294,20 +295,20 @@ fun TemplateListScreen(
         )
     }
 
-    /*selectedTemplate?.let { gear ->
-        GearDetailDialog(
-            gearId = gear.id,
+    selectedTemplate?.let { template ->
+        TemplateDetailDialog(
+            templateId = template.id,
             onDismiss = { selectedTemplate = null },
             onDelete = { id ->
-                gearViewModel.delete(id)
+                templateViewModel.delete(id)
                 selectedTemplate = null
             },
-            onEdit = { id, name, description, categoryId, locationId ->
-                val newGear = GearUi(id, name, description, categoryId, locationId)
-                gearViewModel.update(newGear)
+            onEdit = { id, title, description, duration, gearList, color ->
+                val newTemplate = TemplateUi(id, title, description, duration, gearList, color)
+                templateViewModel.update(newTemplate)
             }
         )
-    }*/
+    }
 }
 
 /**
