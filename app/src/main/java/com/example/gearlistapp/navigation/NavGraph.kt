@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gearlistapp.presentation.screens.gear.GearsHomeScreen
 import com.example.gearlistapp.presentation.screens.HomeScreen
-import com.example.gearlistapp.presentation.screens.TemplatesHomeScreen
+import com.example.gearlistapp.presentation.screens.template.TemplatesHomeScreen
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel

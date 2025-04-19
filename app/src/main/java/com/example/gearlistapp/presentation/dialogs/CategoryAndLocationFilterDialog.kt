@@ -40,15 +40,15 @@ import com.example.gearlistapp.ui.common.LocationDropdown
  * @param previousLocation az elozo helyszin
  */
 @Composable
-fun FilterDialog(onDismiss: () -> Unit,
-                 onCategorySelected: (String) -> Unit,
-                 onLocationSelected: (String) -> Unit,
-                 onDeleteFilters: () -> Unit,
-                 gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-                 categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-                 locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
-                 previousCategory: String = "null",
-                 previousLocation: String = "null",
+fun CategoryAndLocationFilterDialog(onDismiss: () -> Unit,
+                                    onCategorySelected: (String) -> Unit,
+                                    onLocationSelected: (String) -> Unit,
+                                    onDeleteFilters: () -> Unit,
+                                    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+                                    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+                                    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+                                    previousCategory: String = "null",
+                                    previousLocation: String = "null",
 ) {
 
     var selectedLocation by remember { mutableStateOf<String>("null") }

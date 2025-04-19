@@ -47,4 +47,10 @@
     <string name="search">Search...</string>
     <string name="edit_gear">Edit gear</string>
     <string name="day">day</string>
+    <string name="text_empty_template_list">Template list is empty.</string>
+    <string name="add_new_template">Add new template</string>
+    <string name="template_title">Template title</string>
+    <string name="duration">Duration</string>
+    <string name="duration_day">Duration day</string>
+    <string name="select_gears">Select gears</string>
 </resources>

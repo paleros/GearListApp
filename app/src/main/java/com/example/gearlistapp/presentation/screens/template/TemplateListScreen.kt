@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.screens.gear
+package com.example.gearlistapp.presentation.screens.template
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -29,7 +29,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
-import com.example.gearlistapp.presentation.viewmodel.GearListState
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.ui.model.toUiText
 import androidx.compose.foundation.lazy.items
@@ -51,7 +50,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import com.example.gearlistapp.ui.model.asGearEntity
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextField
@@ -59,42 +57,48 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import com.example.gearlistapp.presentation.dialogs.CategoryAndLocationFilterDialog
-import com.example.gearlistapp.presentation.dialogs.gear.GearCreateDialog
-import com.example.gearlistapp.presentation.dialogs.gear.GearDetailDialog
+import com.example.gearlistapp.presentation.dialogs.template.TemplateCreateDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
-import com.example.gearlistapp.ui.model.GearUi
+import com.example.gearlistapp.presentation.viewmodel.TemplateListState
+import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
+import com.example.gearlistapp.ui.model.TemplateUi
+import com.example.gearlistapp.ui.model.asTemplateEntity
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 
 /**
- * A felszereles lista megjelenitese
- * @param gearViewModel a felszereles viewmodelje
- * @param categoryViewModel a kategoria viewmodelje
- * @param locationViewModel a helyszin viewmodelje
+ * A sablonok listajat megjelenito kepernyo
+ * @param gearViewModel a felszerelesekhez tartozo ViewModel
+ * @param categoryViewModel a kategoriakhoz tartozo ViewModel
+ * @param locationViewModel a helyszinekhez tartozo ViewModel
+ * @param templateViewModel a sablonokhoz tartozo ViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GearListScreen(
+fun TemplateListScreen(
     gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
     categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory)
+    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
 ) {
 
 
-    val gearList = gearViewModel.state.collectAsStateWithLifecycle().value
+    val templateList = templateViewModel.state.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-    var showCreateDialog by remember { mutableStateOf(false) }
+    var showCreateTemplateDialog by remember { mutableStateOf(false) }
     var showIndicator by remember { mutableStateOf(false) }
-    var selectedGear by remember { mutableStateOf<GearUi?>(null) }
+    var selectedTemplate by remember { mutableStateOf<TemplateUi?>(null) }
 
     var searchText by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String>("null") }
     var selectedLocation by remember { mutableStateOf<String>("null") }
     var sortOrder by remember { mutableStateOf(SortOrder.NameAsc) }
-    var showFilterDialog by remember { mutableStateOf(false) }
+    var showTemplateFilterDialog by remember { mutableStateOf(false) }
 
     var flipped by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -106,6 +110,7 @@ fun GearListScreen(
                 gearViewModel.loadGears()
                 categoryViewModel.loadCategories()
                 locationViewModel.loadLocations()
+                templateViewModel.loadTemplates()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -115,20 +120,21 @@ fun GearListScreen(
     }
 
     /** Szures, rendezes es kereses */
-    val filteredAndSortedGearList = gearList.let {
+    val filteredAndSortedTemplateList = templateList.let {
         when (it) {
-            is GearListState.Result -> {
-                it.gearList
-                    .filter { gear ->
-                        gear.name.contains(searchText, ignoreCase = true) &&
-                                (gear.categoryId.toString() == selectedCategory || "null" == selectedCategory) &&
-                                (gear.locationId.toString()== selectedLocation || "null" == selectedLocation)
+            is TemplateListState.Result -> {
+                it.templateList
+                    .filter { template ->
+                        template.title.contains(searchText, ignoreCase = true)
+                                //&&
+                                //(gear.categoryId.toString() == selectedCategory || "null" == selectedCategory) &&
+                                //(gear.locationId.toString()== selectedLocation || "null" == selectedLocation)
 
                     }
-                    .sortedWith { gear1, gear2 ->
+                    .sortedWith { template1, template2 ->
                         when (sortOrder) {
-                            SortOrder.NameAsc -> gear1.name.compareTo(gear2.name)
-                            SortOrder.NameDesc -> gear2.name.compareTo(gear1.name)
+                            SortOrder.NameAsc -> template1.title.compareTo(template2.title)
+                            SortOrder.NameDesc -> template2.title.compareTo(template1.title)
                         }
                     }
             }
@@ -142,7 +148,7 @@ fun GearListScreen(
         modifier = Modifier.fillMaxSize().padding(0.dp),
         floatingActionButton = {
             LargeFloatingActionButton(
-                onClick = { showCreateDialog = true },
+                onClick = { showCreateTemplateDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -176,7 +182,7 @@ fun GearListScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 /** Filter ikon */
-                IconButton(onClick = { showFilterDialog = true }) {
+                IconButton(onClick = { showTemplateFilterDialog = true }) {
                     Box {
                         Icon(Icons.Default.FilterList, contentDescription = "Filter")
                         if (showIndicator) {
@@ -197,7 +203,7 @@ fun GearListScreen(
                 IconButton(onClick = {
                     flipped = !flipped
                     sortOrder = if
-                        (sortOrder == SortOrder.NameAsc) SortOrder.NameDesc
+                                        (sortOrder == SortOrder.NameAsc) SortOrder.NameDesc
                     else
                         SortOrder.NameAsc
                 }) {
@@ -220,7 +226,7 @@ fun GearListScreen(
                     .padding(innerPadding)
                     .padding(8.dp)
                     .background(
-                        color = if (gearList is GearListState.Loading || gearList is GearListState.Error) {
+                        color = if (templateList is TemplateListState.Loading || templateList is TemplateListState.Error) {
                             MaterialTheme.colorScheme.secondaryContainer
                         } else {
                             MaterialTheme.colorScheme.background
@@ -228,31 +234,31 @@ fun GearListScreen(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                when (gearList) {
-                    is GearListState.Loading -> CircularProgressIndicator(
+                when (templateList) {
+                    is TemplateListState.Loading -> CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.secondaryContainer
                     )
 
-                    is GearListState.Error -> Text(
-                        text = gearList.error.toUiText().asString(context)
+                    is TemplateListState.Error -> Text(
+                        text = templateList.error.toUiText().asString(context)
                     )
 
-                    is GearListState.Result -> {
-                        if (filteredAndSortedGearList.isEmpty()) {
-                            Text(text = stringResource(id = R.string.text_empty_gear_list))
+                    is TemplateListState.Result -> {
+                        if (filteredAndSortedTemplateList.isEmpty()) {
+                            Text(text = stringResource(id = R.string.text_empty_template_list))
                         } else {
-                            Column {
-                                LazyColumn(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                ) {
-                                    items(
-                                        filteredAndSortedGearList,
-                                        key = { gear -> gear.id }) { gear ->
-                                        GearItem(
-                                            gear.asGearEntity(),
-                                            onClick = { selectedGear = gear })
-                                    }
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                items(
+                                    filteredAndSortedTemplateList,
+                                    key = { template -> template.id }
+                                ) { template ->
+                                    TemplateItem(
+                                        template = template.asTemplateEntity(),
+                                        onClick = { selectedTemplate = template }
+                                    )
                                 }
                             }
                         }
@@ -262,53 +268,50 @@ fun GearListScreen(
         }
     }
 
-    if (showCreateDialog) {
-        GearCreateDialog(
-            categoryViewModel = categoryViewModel,
-            gearViewModel = gearViewModel,
-            locationViewModel = locationViewModel,
-            onDismiss = { showCreateDialog = false },
-            onSave = { name, description, categoryId, locationId ->
+    if (showCreateTemplateDialog) {
+        TemplateCreateDialog(
+            onDismiss = { showCreateTemplateDialog = false },
+            onSave = { title, description, duration, backgroundColor, itemList ->
                 coroutineScope.launch {
-                    gearViewModel.add(name, description, categoryId, locationId)
-                    showCreateDialog = false
+                    templateViewModel.add(title, description, duration, backgroundColor, itemList)
+                    showCreateTemplateDialog = false
                 }
             }
         )
     }
 
-    if (showFilterDialog) {
-        CategoryAndLocationFilterDialog(
+    /*if (showTemplateFilterDialog) {
+        FilterDialog(
             categoryViewModel = categoryViewModel,
             gearViewModel = gearViewModel,
             locationViewModel = locationViewModel,
-            onDismiss = { showFilterDialog = false },
+            onDismiss = { showTemplateFilterDialog = false },
             onCategorySelected = { selectedCategory = it.toString() },
             onLocationSelected = { selectedLocation = it.toString() },
             onDeleteFilters = {
                 selectedCategory = "null"
                 selectedLocation = "null"
-                showFilterDialog = false
+                showTemplateFilterDialog = false
             },
             previousCategory = selectedCategory,
             previousLocation = selectedLocation,
         )
-    }
+    }*/
 
-    selectedGear?.let {gear ->
+    /*selectedTemplate?.let { gear ->
         GearDetailDialog(
             gearId = gear.id,
-            onDismiss = { selectedGear = null },
+            onDismiss = { selectedTemplate = null },
             onDelete = { id ->
                 gearViewModel.delete(id)
-                selectedGear = null
+                selectedTemplate = null
             },
             onEdit = { id, name, description, categoryId, locationId ->
                 val newGear = GearUi(id, name, description, categoryId, locationId)
                 gearViewModel.update(newGear)
             }
         )
-    }
+    }*/
 }
 
 /**
