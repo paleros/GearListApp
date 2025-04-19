@@ -1,21 +1,25 @@
 package com.example.gearlistapp.navigation
 
-import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backpack
+import androidx.compose.material.icons.filled.BeachAccess
+import androidx.compose.material.icons.filled.Hiking
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.gearlistapp.R
 
 /**
  * A screen-ek navigaciojat reprezentalo osztaly.
  * @property route a navigacios elem azonositoja.
  * @property title a navigacios elem cime.
- * @property iconRes a navigacios elem ikonja.
+ * @property icon a navigacios elem ikonja.
  */
-sealed class Screen(val route: String, val title: Int, @DrawableRes val iconRes: Int) {
+sealed class Screen(val route: String, val title: Int, val icon: ImageVector) {
     /** A HomeScreen osztalya (kezdokepernyo, itt jelennek meg az aktualis felszereleslistak).*/
-    object HomeScreen : Screen("home_screen", R.string.gear_lists, R.drawable.baseline_hiking_24)
+    object HomeScreen : Screen("home_screen", R.string.gear_lists, Icons.Default.Hiking)
     /** A GearsHomeScreen osztalya (felszerelesek kezdokepernyoje).*/
-    object GearsHomeScreen : Screen("gears_home_screen", R.string.gears, R.drawable.baseline_beach_access_24)
+    object GearsHomeScreen : Screen("gears_home_screen", R.string.gears, Icons.Default.BeachAccess)
     /** A TemplatesHomeScreen osztalya (felszereleslista sablonok kezdokepernyoje).*/
-    object TemplatesHomeScreen : Screen("templates_home_screen", R.string.templates, R.drawable.baseline_all_inbox_24)
+    object TemplatesHomeScreen : Screen("templates_home_screen", R.string.templates, Icons.Default.Backpack)
 }
 
 /** A home screen-ek listaja, a TopAppBar megjeleniteshez.*/
