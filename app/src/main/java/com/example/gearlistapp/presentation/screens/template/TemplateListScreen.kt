@@ -68,6 +68,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.runtime.mutableIntStateOf
+import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialog
 
 /**
  * A sablonok listajat megjelenito kepernyo
@@ -95,8 +97,8 @@ fun TemplateListScreen(
     var selectedTemplate by remember { mutableStateOf<TemplateUi?>(null) }
 
     var searchText by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf<String>("null") }
-    var selectedLocation by remember { mutableStateOf<String>("null") }
+    var selectedMin by remember { mutableIntStateOf(1) }
+    var selectedMax by remember { mutableIntStateOf(30) }
     var sortOrder by remember { mutableStateOf(SortOrder.NameAsc) }
     var showTemplateFilterDialog by remember { mutableStateOf(false) }
 
@@ -126,9 +128,9 @@ fun TemplateListScreen(
                 it.templateList
                     .filter { template ->
                         template.title.contains(searchText, ignoreCase = true)
-                                //&&
-                                //(gear.categoryId.toString() == selectedCategory || "null" == selectedCategory) &&
-                                //(gear.locationId.toString()== selectedLocation || "null" == selectedLocation)
+                                &&
+                                ((template.duration >= selectedMin && template.duration <= selectedMax)
+                                        || (template.duration >= selectedMin && 30 == selectedMax))
 
                     }
                     .sortedWith { template1, template2 ->
@@ -142,7 +144,7 @@ fun TemplateListScreen(
         }
     }
 
-    showIndicator = "null" != selectedCategory || "null" != selectedLocation
+    showIndicator = selectedMin != 1 || selectedMax != 30
 
     Scaffold(
         modifier = Modifier.fillMaxSize().padding(0.dp),
@@ -280,23 +282,17 @@ fun TemplateListScreen(
         )
     }
 
-    /*if (showTemplateFilterDialog) {
-        FilterDialog(
-            categoryViewModel = categoryViewModel,
-            gearViewModel = gearViewModel,
-            locationViewModel = locationViewModel,
+    if (showTemplateFilterDialog) {
+        TemplateFilterDialog(
             onDismiss = { showTemplateFilterDialog = false },
-            onCategorySelected = { selectedCategory = it.toString() },
-            onLocationSelected = { selectedLocation = it.toString() },
-            onDeleteFilters = {
-                selectedCategory = "null"
-                selectedLocation = "null"
-                showTemplateFilterDialog = false
+            onRangeSelected = { min, max ->
+                selectedMin = min
+                selectedMax = max
             },
-            previousCategory = selectedCategory,
-            previousLocation = selectedLocation,
+            previousMax = selectedMax,
+            previousMin = selectedMin,
         )
-    }*/
+    }
 
     /*selectedTemplate?.let { gear ->
         GearDetailDialog(
