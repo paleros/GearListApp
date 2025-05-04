@@ -11,7 +11,6 @@ import com.example.gearlistapp.ui.model.GearUi
 import com.example.gearlistapp.domain.usecases.gear.GearUseCases
 import com.example.gearlistapp.ui.model.asGear
 import com.example.gearlistapp.ui.model.asGearUi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -77,17 +76,28 @@ class GearViewModel(
      * @param description a felszereles leirasa
      * @param categoryId a felszereles kategoria azonositoja
      * @param locationId a felszereles helyszin azonositoja
+     * @param inPackage bepakoltuk-e mar a csomagba, csak akkor lenyeges, ha konkret
+     * @param pieces hany darab kell belole, csak akkor lenyeges, ha konkret
+     * @param parent konkret-e a felszereles
+     * @param onResult a callback, amely visszaadja a felszereles id-jat
+     * @return a felszereles id-je
      */
-    fun add(name: String, description: String, categoryId: Int, locationId: Int) {
+    fun add(name: String, description: String, categoryId: Int, locationId: Int,
+            inPackage: Boolean = false, pieces: Int = 1, parent: Int = -1,
+            onResult: (Int) -> Unit) {
         viewModelScope.launch {
             val newGear = GearUi(
                 name = name,
                 description = description,
                 categoryId = categoryId,
-                locationId = locationId
+                locationId = locationId,
+                inPackage = inPackage,
+                pieces = pieces,
+                parent = parent
             )
-            gearOperations.save(newGear.asGear())
+            val id = gearOperations.save(newGear.asGear())
             loadGears()
+            onResult(id)
         }
     }
 

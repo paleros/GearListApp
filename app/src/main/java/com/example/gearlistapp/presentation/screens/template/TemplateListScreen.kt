@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +30,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.ui.model.toUiText
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -258,10 +256,12 @@ fun TemplateListScreen(
                                     filteredAndSortedTemplateList,
                                     key = { template -> template.id }
                                 ) { template ->
-                                    TemplateItem(
-                                        template = template.asTemplateEntity(),
-                                        onClick = { selectedTemplate = template }
-                                    )
+                                    if (!template.concrete) {
+                                        TemplateItem(
+                                            template = template.asTemplateEntity(),
+                                            onClick = { selectedTemplate = template }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -274,9 +274,26 @@ fun TemplateListScreen(
     if (showCreateTemplateDialog) {
         TemplateCreateDialog(
             onDismiss = { showCreateTemplateDialog = false },
-            onSave = { title, description, duration, backgroundColor, itemList ->
+            onSave = { title, description, duration, selectedMap , piecesMap, backgroundColor ->
+                val gearList = mutableListOf<Int>()
                 coroutineScope.launch {
-                    templateViewModel.add(title, description, duration, backgroundColor, itemList)
+                    for ((id, isSelected) in selectedMap) {
+                        if (isSelected) {
+                            val gear = gearViewModel.getById(id)
+                            gearViewModel.add(
+                                gear?.name ?: "",
+                                gear?.description ?: "",
+                                gear?.categoryId ?: 0,
+                                gear?.locationId ?: 0,
+                                false,
+                                piecesMap[id]?.toInt() ?: 1,
+                                gear?.id ?: -1,
+                            ) { id ->
+                                gearList.add(id)
+                            }
+                        }
+                    }
+                    templateViewModel.add(title, description, duration, gearList, backgroundColor)
                     showCreateTemplateDialog = false
                 }
             }
@@ -300,12 +317,41 @@ fun TemplateListScreen(
             templateId = template.id,
             onDismiss = { selectedTemplate = null },
             onDelete = { id ->
+                var gears : List<Int> = emptyList()
+                templateViewModel.getById(id){template ->
+                    gears = template?.itemList ?: emptyList()
+                }
+                for (gear in gears){
+                    gearViewModel.delete(gear)
+                }
                 templateViewModel.delete(id)
                 selectedTemplate = null
             },
-            onEdit = { id, title, description, duration, gearList, color ->
-                val newTemplate = TemplateUi(id, title, description, duration, gearList, color)
-                templateViewModel.update(newTemplate)
+            onEdit = { id, title, description, duration, selectedMap , piecesMap, backgroundColor ->
+                val gearList = mutableListOf<Int>()
+                coroutineScope.launch {
+                    for ((id, isSelected) in selectedMap) {
+                        if (isSelected) {
+                            val gear = gearViewModel.getById(id)
+                            gearViewModel.add(
+                                gear?.name ?: "",
+                                gear?.description ?: "",
+                                gear?.categoryId ?: 0,
+                                gear?.locationId ?: 0,
+                                false,
+                                piecesMap[id]?.toInt() ?: 1,
+                                gear?.id ?: -1,
+                            ) { id ->
+                                gearList.add(id)
+                            }
+                        }
+                    }
+
+                    val newTemplate =
+                        TemplateUi(id, title, description, duration, gearList, backgroundColor)
+                    templateViewModel.update(newTemplate)
+                    selectedTemplate = null
+                }
             }
         )
     }

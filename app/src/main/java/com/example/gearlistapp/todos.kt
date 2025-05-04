@@ -7,6 +7,9 @@ package com.example.gearlistapp
 //TODO actual templates
 //TODO kereses
 
+//TODO nem lehet két ugyanolyan nevű
+//TODO kötelező bemenetek
+//TODO hibakezelés
 //TODO errorok
 
 //------------

@@ -56,4 +56,7 @@
     <string name="days">days</string>
     <string name="gear_list">Gear list</string>
     <string name="edit_template">Edit template</string>
+    <string name="pcs">pcs</string>
+    <string name="pieces">Pieces</string>
+    <string name="this_field_is_required">This field is required</string>
 </resources>

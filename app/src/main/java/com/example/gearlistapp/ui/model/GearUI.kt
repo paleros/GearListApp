@@ -14,6 +14,9 @@ data class GearUi(
     val description: String = "",
     val categoryId: Int = 0,
     val locationId: Int = 0,
+    val inPackage: Boolean = false,
+    val pieces: Int = 1,
+    val parent: Int = -1,
 )
 
 /**
@@ -27,6 +30,9 @@ fun Gear.asGearUi(): GearUi = GearUi(
     description = description,
     categoryId = categoryId,
     locationId = locationId,
+    inPackage = inPackage,
+    pieces = pieces,
+    parent = parent
 )
 
 /**
@@ -39,7 +45,10 @@ fun GearUi.asGear(): Gear = Gear(
     name = name,
     description = description,
     categoryId = categoryId,
-    locationId = locationId
+    locationId = locationId,
+    inPackage = inPackage,
+    pieces = pieces,
+    parent = parent
 )
 
 /**
@@ -52,5 +61,8 @@ fun GearUi.asGearEntity(): GearEntity = GearEntity(
     name = name,
     description = description,
     categoryId = categoryId,
-    locationId = locationId
+    locationId = locationId,
+    inPackage = inPackage,
+    pieces = pieces,
+    parent = parent
 )

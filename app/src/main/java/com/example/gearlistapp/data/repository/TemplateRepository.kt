@@ -36,9 +36,12 @@ class TemplateRepository(private val templateDao: TemplateDao) {
         val duration = template.duration
         val itemList = template.itemList
         val backgroundColor = template.backgroundColor
+        val date = template.date
+        val concrete = template.concrete
 
         val newTemplate = TemplateEntity(title = title, description = description,
-            duration = duration, itemList = itemList, backgroundColor = backgroundColor)
+            duration = duration, itemList = itemList, backgroundColor = backgroundColor,
+            date = date, concrete = concrete)
         templateDao.insertTemplate(newTemplate)
     }
 

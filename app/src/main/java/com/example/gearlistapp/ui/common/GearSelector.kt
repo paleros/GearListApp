@@ -1,6 +1,5 @@
 package com.example.gearlistapp.ui.common
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -9,8 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,22 +29,25 @@ import com.example.gearlistapp.R
 import com.example.gearlistapp.presentation.viewmodel.GearListState
 import com.example.gearlistapp.ui.model.toUiText
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.ui.text.input.KeyboardType
 
 /**
  * A felszerelesek valaszto komponens
  * @param gearViewModel a felszerelesek viewmodelje
- * @param selectedGearIds a valasztott felszerelesek id-jei
- * @param onSelectionChanged a valasztas megvaltozasa
+ * @param selectedMap a valasztott felszerelesek id-jei
+ * @param piecesMap a valasztott darabszamok
  */
 @Composable
 fun GearSelector(
     gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    selectedGearIds: List<Int>,
-    onSelectionChanged: (List<Int>) -> Unit
+    piecesMap: SnapshotStateMap<Int, String>,
+    selectedMap: SnapshotStateMap<Int, Boolean>,
 ) {
     val gearList = gearViewModel.state.collectAsStateWithLifecycle().value
     val context = LocalContext.current
-    val selectedIds = remember { mutableStateListOf<Int>().apply { addAll(selectedGearIds) } }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -93,29 +93,36 @@ fun GearSelector(
                             .heightIn(max = 200.dp)
                     ) {
                         items(gearList, key = { it.id }) { gear ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        if (selectedIds.contains(gear.id)) {
-                                            selectedIds.remove(gear.id)
-                                        } else {
-                                            selectedIds.add(gear.id)
+
+                            if (gear.parent == -1) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp, horizontal = 8.dp)
+                                ) {
+                                    Checkbox(
+                                        checked = selectedMap[gear.id] == true,
+                                        onCheckedChange = {
+                                            selectedMap[gear.id] = it
                                         }
-                                        onSelectionChanged(selectedIds.toList())
-                                    }
-                                    .padding(vertical = 4.dp, horizontal = 8.dp)
-                            ) {
-                                Checkbox(
-                                    checked = selectedIds.contains(gear.id),
-                                    onCheckedChange = {
-                                        if (it) selectedIds.add(gear.id) else selectedIds.remove(gear.id)
-                                        onSelectionChanged(selectedIds.toList())
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = gear.name)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(text = gear.name)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    TextField(
+                                        value = piecesMap[gear.id].toString(),
+                                        onValueChange = { newValue ->
+                                            piecesMap[gear.id] = newValue.toString()
+                                        },
+                                        label = { Text(stringResource(id = R.string.pieces)) },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        singleLine = true,
+                                        keyboardOptions = KeyboardOptions.Default.copy(
+                                            keyboardType = KeyboardType.Number
+                                        ),
+                                        )
+                                }
                             }
                         }
                     }

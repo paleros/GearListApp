@@ -12,9 +12,11 @@ class SaveGearUseCase(private val repository: GearRepository) {
     /**
      * mentese.
      * @param model a model.
+     * @return a mentett elem azonositoja.
      */
-    suspend operator fun invoke(model: Gear) {
-        repository.insert(model.asEntity())
+    suspend operator fun invoke(model: Gear) :Int {
+        var id = repository.insert(model.asEntity())
+        return id
     }
 
 }

@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -60,11 +59,10 @@ fun TemplateItem(
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
     onClick: () -> Unit
 ) {
-    var title by remember { mutableStateOf(template.title) }
-    var duration by remember { mutableIntStateOf(template.duration) }
-    var itemList by remember { mutableStateOf(template.itemList) }
+    var title = template.title
+    var duration = template.duration
+    var itemList = template.itemList
     val backgroundColor = Color(template.backgroundColor)
-
     Card(
         modifier = Modifier
             .padding(8.dp)

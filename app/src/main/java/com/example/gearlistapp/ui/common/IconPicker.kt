@@ -38,10 +38,11 @@ import com.example.gearlistapp.R
  */
 @Composable
 fun IconPicker(
+    selectedIcon: ImageVector,
     onIconSelected: (ImageVector) -> Unit
 ) {
 
-    var selectedIcon by remember { mutableStateOf<ImageVector?>(null) }
+    var selectedIcon by remember { mutableStateOf<ImageVector?>(selectedIcon) }
 
     /** A valaszthato ikonok listaja */
     val icons = listOf(

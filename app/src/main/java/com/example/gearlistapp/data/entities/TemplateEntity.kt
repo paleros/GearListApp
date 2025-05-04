@@ -13,6 +13,8 @@ import kotlin.String
  * @property duration az esemeny idotartama (hany napos?).
  * @property itemList a sablonhoz tartozo elemek listaja.
  * @property backgroundColor a sablon hatter szine.
+ * @property date a program idopontja, csak akkor lényeges, ha konkret.
+ * @property concrete konkret-e a sablon.
  */
 @Entity(tableName = "template_table")
 data class TemplateEntity(
@@ -21,7 +23,9 @@ data class TemplateEntity(
     val description: String,
     val duration: Int,
     val itemList: List<Int>,
-    val backgroundColor: Int
+    val backgroundColor: Int,
+    val date: String,
+    val concrete: Boolean
 ){
 
     /**
@@ -35,6 +39,8 @@ data class TemplateEntity(
         description = description,
         duration = duration,
         itemList = itemList,
-        backgroundColor = backgroundColor
+        backgroundColor = backgroundColor,
+        date = date,
+        concrete = concrete
     )
 }

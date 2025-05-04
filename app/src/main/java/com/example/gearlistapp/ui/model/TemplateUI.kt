@@ -14,7 +14,9 @@ data class TemplateUi(
     val description: String,
     val duration: Int,
     val itemList: List<Int>,
-    val backgroundColor: Int
+    val backgroundColor: Int,
+    val date: String = "",
+    val concrete: Boolean = false
 )
 
 /**
@@ -28,7 +30,9 @@ fun Template.asTemplateUi(): TemplateUi = TemplateUi(
     description = description,
     duration = duration,
     itemList = itemList,
-    backgroundColor = backgroundColor
+    backgroundColor = backgroundColor,
+    date = date,
+    concrete = concrete
 )
 
 /**
@@ -42,7 +46,9 @@ fun TemplateUi.asTemplate(): Template = Template(
     description = description,
     duration = duration,
     itemList = itemList,
-    backgroundColor = backgroundColor
+    backgroundColor = backgroundColor,
+    date = date,
+    concrete = concrete
 )
 
 /**
@@ -56,5 +62,7 @@ fun TemplateUi.asTemplateEntity(): TemplateEntity = TemplateEntity(
     description = description,
     duration = duration,
     itemList = itemList,
-    backgroundColor = backgroundColor
+    backgroundColor = backgroundColor,
+    date = date,
+    concrete = concrete
 )

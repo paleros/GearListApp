@@ -73,14 +73,17 @@ class TemplateViewModel(
     /**
      * A sablon elmentese
      */
-    fun add(title: String, description: String, duration: Int, itemList: List<Int>, backgroundColor: Int) {
+    fun add(title: String, description: String, duration: Int, itemList: List<Int>, backgroundColor: Int,
+            date: String = "", concrete: Boolean = false) {
         viewModelScope.launch {
             val newTemplate = TemplateUi(
                 title = title,
                 description = description,
                 duration = duration,
                 itemList = itemList,
-                backgroundColor = backgroundColor
+                backgroundColor = backgroundColor,
+                date = date,
+                concrete = concrete
             )
             templateOperations.save(newTemplate.asTemplate())
             loadTemplates()

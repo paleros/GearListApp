@@ -11,6 +11,9 @@ import com.example.gearlistapp.data.model.Gear
  * @property description a kategoria leirasa.
  * @property categoryId a kategoria azonositoja.
  * @property locationId a helyszin azonositoja.
+ * @property inPackage bepakoltuk-e mar a csomagba, csak akkor lenyeges, ha konkret.
+ * @property pieces hany darab kell belole, csak akkor lenyeges, ha konkret.
+ * @property parent ha van szuloje felszerelesnek, -1 kulonben.
  */
 @Entity(tableName = "gear_table")
 data class GearEntity(
@@ -18,9 +21,11 @@ data class GearEntity(
     val name: String,
     val description: String,
     val categoryId: Int,
-    val locationId: Int
+    val locationId: Int,
+    val inPackage: Boolean,
+    val pieces: Int = 1,
+    val parent: Int = -1,
 ){
-
     /**
      * A felszereles entitasbol konvertalhato vissza a felszereles modell.
      * @receiver a felszereles entitas.
@@ -31,6 +36,9 @@ data class GearEntity(
         name = name,
         description = description,
         categoryId = categoryId,
-        locationId = locationId
+        locationId = locationId,
+        inPackage = inPackage,
+        pieces = pieces,
+        parent = parent
     )
 }

@@ -13,9 +13,10 @@ interface GearDao {
     /**
      * Felszereles beszurasa az adatbazisba.
      * @param gear a beszurando felszereles.
+     * @return a beszurt felszereles azonositoja.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGear(gear: GearEntity)
+    suspend fun insertGear(gear: GearEntity): Long
 
     /**
      * Az osszes felszereles lekerdezese az adatbazisbol.

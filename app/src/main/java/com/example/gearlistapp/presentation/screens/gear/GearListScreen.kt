@@ -249,9 +249,11 @@ fun GearListScreen(
                                     items(
                                         filteredAndSortedGearList,
                                         key = { gear -> gear.id }) { gear ->
-                                        GearItem(
-                                            gear.asGearEntity(),
-                                            onClick = { selectedGear = gear })
+                                        if (gear.parent == -1) {
+                                            GearItem(
+                                                gear.asGearEntity(),
+                                                onClick = { selectedGear = gear })
+                                        }
                                     }
                                 }
                             }
@@ -270,7 +272,7 @@ fun GearListScreen(
             onDismiss = { showCreateDialog = false },
             onSave = { name, description, categoryId, locationId ->
                 coroutineScope.launch {
-                    gearViewModel.add(name, description, categoryId, locationId)
+                    gearViewModel.add(name, description, categoryId, locationId){}
                     showCreateDialog = false
                 }
             }

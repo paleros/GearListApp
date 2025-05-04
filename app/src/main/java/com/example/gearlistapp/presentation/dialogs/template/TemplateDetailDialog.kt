@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +42,15 @@ import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 
+/**
+ * A sablon adatait megjelenito dialogus
+ * @param templateId a sablon azonositoja
+ * @param gearViewModel a felszereles viewmodelje
+ * @param templateViewModel a sablon viewmodelje
+ * @param onDismiss a dialogus bezarasa
+ * @param onDelete a sablon torlese
+ * @param onEdit a sablon modositasa
+ */
 @Composable
 fun TemplateDetailDialog(
     templateId: Int,
@@ -48,13 +58,13 @@ fun TemplateDetailDialog(
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
     onDismiss: () -> Unit,
     onDelete: (Int) -> Unit,
-    onEdit: (Int, String, String, Int, List<Int>, Int) -> Unit
+    onEdit: (Int, String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int) -> Unit
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
 
     var template by remember {mutableStateOf<Template?>(null)}
-    var gearList by remember { mutableStateOf<List<Int>>(emptyList()) }
+    var templateGearList by remember { mutableStateOf<List<Int>>(emptyList()) }
 
     fun refreshTemplate() {
         templateViewModel.getById(templateId) { result ->
@@ -68,7 +78,7 @@ fun TemplateDetailDialog(
         refreshTemplate()
     }
     LaunchedEffect(template?.itemList) {
-        gearList = template?.itemList?: emptyList()
+        templateGearList = template?.itemList?: emptyList()
     }
 
     val backgroundColor = Color(template?.backgroundColor ?: Color.Gray.toArgb())
@@ -118,9 +128,11 @@ fun TemplateDetailDialog(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
-                gearList.forEach { item ->
+                templateGearList.forEach { item ->
                     var itemName by remember { mutableStateOf("") }
+                    var itemPieces by remember { mutableStateOf("") }
                     gearViewModel.getById(id = item) { itemName = it?.name.toString() }
+                    gearViewModel.getById(id = item) { itemPieces = it?.pieces.toString() }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(
                             modifier = Modifier
@@ -135,7 +147,11 @@ fun TemplateDetailDialog(
                             text = itemName,
                             style = MaterialTheme.typography.bodySmall
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.width(30.dp))
+                        Text(
+                            text = itemPieces + " " + stringResource(R.string.pcs),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 }
 
@@ -186,15 +202,10 @@ fun TemplateDetailDialog(
     if (showEditDialog) {
         TemplateEditDialog(
             templateId = template?.id ?: -1,
-            currentTitle = template?.title ?: "",
-            currentDescription = template?.description ?: "",
-            currentDuration = template?.duration ?: 0,
-            currentGearIds = template?.itemList ?: emptyList(),
-            currentColor = template?.backgroundColor ?: Color.Gray.toArgb(),
             templateViewModel = templateViewModel,
             onDismiss = { showEditDialog = false },
-            onEdit = { id, title, description, duration, itemList, backgroundColor ->
-                onEdit(id, title, description, duration, itemList, backgroundColor)
+            onEdit = { id, title, description, duration, selectedMap, piecesMap, backgroundColor ->
+                onEdit(id, title, description, duration, selectedMap, piecesMap, backgroundColor)
                 showEditDialog = false
                 refreshTemplate()
             }

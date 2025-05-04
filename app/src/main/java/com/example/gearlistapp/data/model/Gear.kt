@@ -9,13 +9,19 @@ import com.example.gearlistapp.data.entities.GearEntity
  * @property description a felszereles leirasa.
  * @property categoryId a felszereles kategoria azonositoja.
  * @property locationId a felszereles helyszin azonositoja.
+ * @property inPackage bepakoltuk-e mar a csomagba, csak akkor lényeges, ha konkret.
+ * @property pieces hany darab kell belole, csak akkor lényeges, ha konkret.
+ * @property parent konkret-e a felszereles.
  */
 data class Gear(
     val id: Int,
     val name: String,
     val description: String,
     val categoryId: Int,
-    val locationId: Int
+    val locationId: Int,
+    val inPackage: Boolean,
+    val pieces: Int = 1,
+    val parent: Int = -1,
 ){
 
     /**
@@ -28,6 +34,9 @@ data class Gear(
         name = name,
         description = description,
         categoryId = categoryId,
-        locationId = locationId
+        locationId = locationId,
+        inPackage = inPackage,
+        pieces = pieces,
+        parent = parent
     )
 }

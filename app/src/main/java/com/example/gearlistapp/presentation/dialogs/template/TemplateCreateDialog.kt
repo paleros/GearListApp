@@ -20,10 +20,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.gearlistapp.presentation.viewmodel.GearListState
+import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 import com.example.gearlistapp.ui.common.ColorPickerDropdown
 import com.example.gearlistapp.ui.common.GearSelector
@@ -31,20 +35,46 @@ import com.example.gearlistapp.ui.common.GearSelector
 /**
  * A sablon letrehozo dialogus
  * @param templateViewModel a sablon viewmodelje
+ * @param gearViewModel a felszereles viewmodelje
  * @param onDismiss a dialogus bezarasa
  * @param onSave a sablon elmentese
  */
 @Composable
 fun TemplateCreateDialog(
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
     onDismiss: () -> Unit,
-    onSave: (String, String, Int, List<Int>, Int) -> Unit
+    onSave: (String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int) -> Unit
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var duration by remember { mutableStateOf("") }
     var backgroundColor by remember { mutableIntStateOf(Color.Gray.toArgb()) }
-    val itemList = remember { mutableStateListOf<Int>() }
+    val gearList = gearViewModel.state.collectAsStateWithLifecycle().value
+    val selectedMap = remember { mutableStateMapOf<Int, Boolean>() }
+    val piecesMap = remember { mutableStateMapOf<Int, String>() }
+
+    /** Feltolti a listat az elemekkel*/
+    when (gearList) {
+        is GearListState.Loading -> {
+        }
+
+        is GearListState.Error -> {
+        }
+
+        is GearListState.Result -> {
+            val gears = gearList.gearList
+
+            if (!gears.isEmpty()) {
+                gears.forEach { gear ->
+                    if (gear.parent == -1){
+                        selectedMap[gear.id] = false
+                        piecesMap[gear.id] = "1"
+                    }
+                }
+            }
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -81,11 +111,8 @@ fun TemplateCreateDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 GearSelector(
-                    selectedGearIds = itemList,
-                    onSelectionChanged = { selectedIds ->
-                        itemList.clear()
-                        itemList.addAll(selectedIds)
-                    }
+                    selectedMap = selectedMap,
+                    piecesMap = piecesMap,
                 )
             }
         },
@@ -96,7 +123,8 @@ fun TemplateCreateDialog(
                         title,
                         description,
                         duration.toIntOrNull() ?: 0,
-                        itemList.toList(),
+                        selectedMap,
+                        piecesMap,
                         backgroundColor
                     )
                 }

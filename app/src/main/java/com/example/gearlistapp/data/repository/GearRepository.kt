@@ -26,15 +26,21 @@ class GearRepository(private val gearDao: GearDao) {
     /**
      * Beszur egy GearEntity-t az adatbazisba.
      * @param gear a beszurando GearEntity.
+     * @return a beszurt GearEntity azonositoja.
      */
-    suspend fun insert(gear: GearEntity) {
+    suspend fun insert(gear: GearEntity) :Int {
         /** Id generalas automatikus marad*/
         val name = gear.name
         val description = gear.description
         val categoryId = gear.categoryId
         val locationId = gear.locationId
-        val newGear = GearEntity(name = name, description = description, categoryId = categoryId, locationId = locationId)
-        gearDao.insertGear(newGear)
+        val inPackage = gear.inPackage
+        val pieces = gear.pieces
+        val parent = gear.parent
+        val newGear = GearEntity(name = name, description = description, categoryId = categoryId,
+            locationId = locationId, inPackage = inPackage, pieces = pieces, parent = parent)
+        val id = gearDao.insertGear(newGear)
+        return id.toInt()
     }
 
     /**
