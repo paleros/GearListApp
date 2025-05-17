@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +59,7 @@ fun CategoryDropdown(
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     onCategorySelected: (Int) -> Unit,
     previousCategory: String = "null",
+    isError: MutableState<Boolean> = mutableStateOf(false),
 ) {
 
     val categoryList = categoryViewModel.state.collectAsStateWithLifecycle().value
@@ -91,6 +93,7 @@ fun CategoryDropdown(
             label = { Text(stringResource(id = R.string.category)) },
             readOnly = true,
             modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true),
+            isError = isError.value,
             trailingIcon = {
                 Icon(Icons.Default.ArrowDropDown, contentDescription = null)
             },
@@ -112,7 +115,16 @@ fun CategoryDropdown(
                         modifier = Modifier.size(20.dp)
                     )
                 }
-            }
+            },
+            supportingText = {
+                if (isError.value) {
+                    Text(
+                        text = stringResource(id = R.string.this_field_is_required),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            },
         )
 
         when (categoryList) {
@@ -140,6 +152,7 @@ fun CategoryDropdown(
                                         selectedCategoryColor = category.color
                                         onCategorySelected(category.id)
                                         expanded = false
+                                        isError.value = false
                                     },
                                     text = { Text(category.name) },
                                     leadingIcon = {

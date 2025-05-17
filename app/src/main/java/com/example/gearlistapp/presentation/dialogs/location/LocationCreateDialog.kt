@@ -3,6 +3,7 @@ package com.example.gearlistapp.presentation.dialogs.location
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -23,6 +24,7 @@ import com.example.gearlistapp.R
 @Composable
 fun LocationCreateDialog(onDismiss: () -> Unit, onSave: (String) -> Unit) {
     var name by remember { mutableStateOf("") }
+    var isError by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -31,15 +33,31 @@ fun LocationCreateDialog(onDismiss: () -> Unit, onSave: (String) -> Unit) {
             Column {
                 TextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = {
+                        name = it
+                        isError = it.isBlank()            },
                     label = { Text(stringResource(id = R.string.name)) },
-                    modifier = Modifier.fillMaxWidth()
+                    isError = isError,
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
                 )
+                if (isError) {
+                    Text(
+                        text = stringResource(id = R.string.this_field_is_required),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         },
         /** Mentes gomb */
         confirmButton = {
-            TextButton(onClick = { onSave(name)}) {
+            TextButton(onClick = {
+                isError = name.isBlank()
+                if (!isError) {
+                    onSave(name)
+                }
+            }) {
                 Text(stringResource(id = R.string.save))
             }
         },

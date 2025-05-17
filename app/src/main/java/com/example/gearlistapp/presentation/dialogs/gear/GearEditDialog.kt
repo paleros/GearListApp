@@ -97,7 +97,7 @@ fun GearEditDialog(
                     gearViewModel = gearViewModel,
                     locationViewModel = locationViewModel,
                     onCategorySelected = { categoryId = it.toString() },
-                    previousCategory = currentCategoryId.toString()
+                    previousCategory = currentCategoryId.toString(),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 LocationDropdown(

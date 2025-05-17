@@ -142,7 +142,7 @@ class CategoryViewModel(
     /**
      * A kategoria szine id alapjan
      * @param id a kategoria id-je
-     * @return a kategoria szine
+     * @param onResult a kategoria szine
      */
     fun getColorById(id: Int, onResult: (Int) -> Unit) {
         viewModelScope.launch {
@@ -152,6 +152,21 @@ class CategoryViewModel(
                 null
             }
             onResult(color.toString().toInt())
+        }
+    }
+
+    /**
+     * Egy kategoria id-je
+     * @param onResult a kategoria id-je
+     */
+    fun getFirstId(onResult: (String) -> Unit){
+        viewModelScope.launch {
+            val state = _state.value
+            val id = when (state) {
+                is CategoryListState.Result -> state.categoryList.minByOrNull { it.id }?.id
+                else -> null
+            }
+            onResult(id.toString())
         }
     }
 }

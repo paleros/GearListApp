@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -21,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.gearlistapp.R
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.example.gearlistapp.ui.common.ColorPickerDropdown
 import com.example.gearlistapp.ui.common.IconPicker
 
@@ -32,8 +35,9 @@ import com.example.gearlistapp.ui.common.IconPicker
 @Composable
 fun CategoryCreateDialog(onDismiss: () -> Unit, onSave: (String, Int, ImageVector) -> Unit) {
     var name by remember { mutableStateOf("") }
-    var color by remember { mutableIntStateOf(0) }
+    var color by remember { mutableIntStateOf(Color.Gray.toArgb()) }
     var iconRes by remember { mutableStateOf(Icons.Default.Star) }
+    var isError by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -42,10 +46,21 @@ fun CategoryCreateDialog(onDismiss: () -> Unit, onSave: (String, Int, ImageVecto
             Column {
                 TextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = {
+                        name = it
+                        isError = it.isBlank()},
                     label = { Text(stringResource(id = R.string.name)) },
-                    modifier = Modifier.fillMaxWidth()
+                    isError = isError,
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
                 )
+                if (isError) {
+                    Text(
+                        text = stringResource(id = R.string.this_field_is_required),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
                 /** A szin valasztasa */
                 Spacer(modifier = Modifier.height(8.dp))
                 ColorPickerDropdown(
@@ -53,12 +68,19 @@ fun CategoryCreateDialog(onDismiss: () -> Unit, onSave: (String, Int, ImageVecto
                     onColorSelected = { color = it })
                 /** Az ikon valasztasa */
                 Spacer(modifier = Modifier.height(8.dp))
-                IconPicker(onIconSelected = {iconRes = it})
+                IconPicker(
+                    selectedIcon = iconRes,
+                    onIconSelected = {iconRes = it})
             }
         },
         /** Mentes gomb */
         confirmButton = {
-            TextButton(onClick = { onSave(name, color, iconRes)}) {
+            TextButton(onClick = {
+                isError = name.isBlank()
+                if (!isError) {
+                    onSave(name, color, iconRes)
+                }
+            }) {
                 Text(stringResource(id = R.string.save))
             }
         },

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -53,6 +54,8 @@ fun TemplateCreateDialog(
     val gearList = gearViewModel.state.collectAsStateWithLifecycle().value
     val selectedMap = remember { mutableStateMapOf<Int, Boolean>() }
     val piecesMap = remember { mutableStateMapOf<Int, String>() }
+    var titleIsError by remember { mutableStateOf(false) }
+    var dayIsError by remember { mutableStateOf(false) }
 
     /** Feltolti a listat az elemekkel*/
     when (gearList) {
@@ -83,10 +86,21 @@ fun TemplateCreateDialog(
             Column {
                 TextField(
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = { title = it
+                                    titleIsError = title.isBlank() },
                     label = { Text(stringResource(id = R.string.template_title)) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = titleIsError,
+                    singleLine = true
                 )
+                if (titleIsError) {
+                    Text(
+                        text = stringResource(id = R.string.this_field_is_required),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = description,
@@ -98,11 +112,22 @@ fun TemplateCreateDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = duration,
-                    onValueChange = { duration = it.filter { char -> char.isDigit() } },
+                    onValueChange = { duration = it.filter { char -> char.isDigit() }
+                                    dayIsError = duration.isBlank() },
                     label = { Text(stringResource(id = R.string.duration_day)) },
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    isError = dayIsError
                 )
+                if (dayIsError) {
+                    Text(
+                        text = stringResource(id = R.string.this_field_is_required),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 ColorPickerDropdown(
                     selectedColor = backgroundColor,
@@ -119,14 +144,18 @@ fun TemplateCreateDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSave(
-                        title,
-                        description,
-                        duration.toIntOrNull() ?: 0,
-                        selectedMap,
-                        piecesMap,
-                        backgroundColor
-                    )
+                    titleIsError = title.isBlank()
+                    dayIsError = duration.isBlank()
+                    if (!titleIsError && !dayIsError) {
+                        onSave(
+                            title,
+                            description,
+                            duration.toIntOrNull() ?: 0,
+                            selectedMap,
+                            piecesMap,
+                            backgroundColor
+                        )
+                    }
                 }
             ) {
                 Text(stringResource(id = R.string.save))

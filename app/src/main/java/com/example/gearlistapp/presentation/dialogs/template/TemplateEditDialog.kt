@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -66,8 +67,10 @@ fun TemplateEditDialog(
 
     var currentSelectedMap = remember { mutableStateMapOf<Int, Boolean>() }
     var currentPiecesMap = remember { mutableStateMapOf<Int, String>() }
-
     var currentSelectedGearParentId = remember { mutableStateListOf<Int>() }
+
+    var titleIsError by remember { mutableStateOf(false) }
+    var dayIsError by remember { mutableStateOf(false) }
 
     LaunchedEffect(templateId) {
         val template = suspendCancellableCoroutine<Template?> { continuation ->
@@ -126,10 +129,21 @@ fun TemplateEditDialog(
             Column {
                 TextField(
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = { title = it
+                        titleIsError = title.isBlank()},
                     label = { Text(stringResource(id = R.string.template_title)) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = titleIsError,
+                    singleLine = true
                 )
+                if (titleIsError) {
+                    Text(
+                        text = stringResource(id = R.string.this_field_is_required),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = description,
@@ -141,11 +155,22 @@ fun TemplateEditDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = duration,
-                    onValueChange = { duration = it.filter { char -> char.isDigit() } },
+                    onValueChange = { duration = it.filter { char -> char.isDigit() }
+                        dayIsError = duration.isBlank()},
                     label = { Text(stringResource(id = R.string.duration_day)) },
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    isError = dayIsError
                 )
+                if (dayIsError) {
+                    Text(
+                        text = stringResource(id = R.string.this_field_is_required),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 ColorPickerDropdown(
                     selectedColor = backgroundColor,
@@ -161,18 +186,22 @@ fun TemplateEditDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onEdit(
-                        templateId,
-                        title,
-                        description,
-                        duration.toIntOrNull() ?: 0,
-                        currentSelectedMap,
-                        currentPiecesMap,
-                        backgroundColor
-                    )
-                    for (id in itemList) {
-                        gearViewModel.getById(id){
-                            gearViewModel.delete(id)
+                    titleIsError = title.isBlank()
+                    dayIsError = duration.isBlank()
+                    if (!titleIsError && !dayIsError) {
+                        onEdit(
+                            templateId,
+                            title,
+                            description,
+                            duration.toIntOrNull() ?: 0,
+                            currentSelectedMap,
+                            currentPiecesMap,
+                            backgroundColor
+                        )
+                        for (id in itemList) {
+                            gearViewModel.getById(id){
+                                gearViewModel.delete(id)
+                            }
                         }
                     }
                 }
