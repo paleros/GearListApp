@@ -9,16 +9,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
@@ -44,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.data.model.Template
+import com.example.gearlistapp.presentation.dialogs.LocationFilterDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateEditDialog
 import com.example.gearlistapp.presentation.screens.actualtemplate.isToday
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
@@ -75,6 +79,10 @@ fun ActualTemplateDetailDialog(
     var template by remember {mutableStateOf<Template?>(null)}
     var templateGearList by remember { mutableStateOf<List<Int>>(emptyList()) }
 
+    var selectedLocation by remember { mutableStateOf<String>("null") }
+    var showFilterDialog by remember { mutableStateOf(false) }
+    var showIndicator by remember { mutableStateOf(false) }
+
     fun refreshTemplate() {
         templateViewModel.getById(templateId) { result ->
             if (result == null) {
@@ -96,6 +104,8 @@ fun ActualTemplateDetailDialog(
         green = backgroundColor.green * 0.8f,
         blue = backgroundColor.blue * 0.8f
     )
+
+    showIndicator = "null" != selectedLocation
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -160,54 +170,85 @@ fun ActualTemplateDetailDialog(
                 Text(text = template?.description ?: "")
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.gear_list) + ":",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                //TODO szures a helyszinre vagy kategoriara
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.select_gears),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    /** Filter ikon */
+                    IconButton(onClick = { showFilterDialog = true }) {
+                        Box {
+                            Icon(Icons.Default.FilterList, contentDescription = "Filter")
+                            if (showIndicator) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = 2.dp, y = (-2).dp)
+                                        .background(
+                                            MaterialTheme.colorScheme.tertiary,
+                                            shape = CircleShape
+                                        )
+                                )
+                            }
+                        }
+                    }
+                }
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 8.dp)
                 ) {
                     items(templateGearList) { item ->
+
                         var itemName by remember { mutableStateOf("") }
                         var itemPieces by remember { mutableStateOf("") }
+                        var itemLocationId by remember { mutableStateOf("") }
                         var itemChecked by remember { mutableStateOf(false) }
                         gearViewModel.getById(id = item) { itemName = it?.name.toString() }
                         gearViewModel.getById(id = item) { itemPieces = it?.pieces.toString() }
                         gearViewModel.getById(id = item) { itemChecked = it?.inPackage == true }
+                        gearViewModel.getById(id = item) { itemLocationId = it?.locationId.toString() }
+                        if (itemLocationId == selectedLocation
+                            || "null" == selectedLocation) {
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 1.dp)
-                        ) {
-                            Checkbox(
-                                checked = itemChecked,
-                                onCheckedChange = { isChecked ->
-                                    itemChecked = isChecked
-                                    gearViewModel.updateInPackage(item, isChecked)
-                                    gearViewModel.checkIfAllInPackage(templateGearList) { allChecked ->
-                                        if (allChecked) {
-                                            showReadyDialog = true
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 1.dp)
+                            ) {
+                                Checkbox(
+                                    checked = itemChecked,
+                                    onCheckedChange = { isChecked ->
+                                        itemChecked = isChecked
+                                        gearViewModel.updateInPackage(item, isChecked)
+                                        gearViewModel.checkIfAllInPackage(templateGearList) { allChecked ->
+                                            if (allChecked) {
+                                                showReadyDialog = true
+                                            }
                                         }
                                     }
-                                }
-                            )
+                                )
 
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = itemName,
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Text(
-                                text = "$itemPieces ${stringResource(R.string.pcs)}",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = itemName,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Text(
+                                    text = "$itemPieces ${stringResource(R.string.pcs)}",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
                         }
                     }
                 }
@@ -277,6 +318,20 @@ fun ActualTemplateDetailDialog(
                 templateViewModel.delete(templateId)
                 onDismiss()
             }
+        )
+    }
+
+    if (showFilterDialog) {
+        LocationFilterDialog(
+            gearViewModel = gearViewModel,
+            onDismiss = { showFilterDialog = false },
+            onLocationSelected = { selectedLocation = it.toString()
+                refreshTemplate() },
+            onDeleteFilters = {
+                selectedLocation = "null"
+                showFilterDialog = false
+            },
+            previousLocation = selectedLocation,
         )
     }
 }

@@ -1,5 +1,7 @@
 package com.example.gearlistapp.ui.common
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -16,6 +18,8 @@ import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.DisposableEffect
@@ -29,10 +33,20 @@ import com.example.gearlistapp.R
 import com.example.gearlistapp.presentation.viewmodel.GearListState
 import com.example.gearlistapp.ui.model.toUiText
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.text.input.KeyboardType
+import com.example.gearlistapp.presentation.dialogs.CategoryFilterDialog
 
 /**
  * A felszerelesek valaszto komponens
@@ -49,6 +63,10 @@ fun GearSelector(
     val gearList = gearViewModel.state.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
+    var selectedCategory by remember { mutableStateOf<String>("null") }
+    var showFilterDialog by remember { mutableStateOf(false) }
+    var showIndicator by remember { mutableStateOf(false) }
+
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -61,6 +79,22 @@ fun GearSelector(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
+
+    /** Szures, rendezes es kereses */
+    val filteredAndSortedGearList = gearList.let {
+        when (it) {
+            is GearListState.Result -> {
+                it.gearList
+                    .filter { gear ->
+                        (gear.categoryId.toString() == selectedCategory || "null" == selectedCategory)
+
+                    }
+            }
+            else -> emptyList()
+        }
+    }
+
+    showIndicator = "null" != selectedCategory
 
     when (gearList) {
         is GearListState.Loading -> {
@@ -82,17 +116,44 @@ fun GearSelector(
                 Text(text = stringResource(id = R.string.text_empty_gear_list))
             } else {
                 Column {
-                    Text(
-                        text = stringResource(id = R.string.select_gears),
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.select_gears),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        /** Filter ikon */
+                        IconButton(onClick = { showFilterDialog = true }) {
+                            Box {
+                                Icon(Icons.Default.FilterList, contentDescription = "Filter")
+                                if (showIndicator) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(8.dp)
+                                            .align(Alignment.TopEnd)
+                                            .offset(x = 2.dp, y = (-2).dp)
+                                            .background(
+                                                MaterialTheme.colorScheme.tertiary,
+                                                shape = CircleShape
+                                            )
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
                             .heightIn(max = 200.dp)
                     ) {
-                        items(gearList, key = { it.id }) { gear ->
+                        items(filteredAndSortedGearList, key = { it.id }) { gear ->
 
                             if (gear.parent == -1) {
                                 Row(
@@ -129,5 +190,18 @@ fun GearSelector(
                 }
             }
         }
+    }
+
+    if (showFilterDialog) {
+        CategoryFilterDialog(
+            gearViewModel = gearViewModel,
+            onDismiss = { showFilterDialog = false },
+            onCategorySelected = { selectedCategory = it.toString() },
+            onDeleteFilters = {
+                selectedCategory = "null"
+                showFilterDialog = false
+            },
+            previousCategory = selectedCategory,
+        )
     }
 }
