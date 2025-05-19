@@ -1,4 +1,4 @@
-package com.example.gearlistapp.presentation.screens.template
+package com.example.gearlistapp.presentation.screens.actualtemplate
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,11 +37,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +54,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import com.example.gearlistapp.presentation.dialogs.template.TemplateCreateDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateListState
@@ -63,17 +61,13 @@ import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 import com.example.gearlistapp.ui.model.TemplateUi
 import com.example.gearlistapp.ui.model.asTemplateEntity
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.navigation.NavHostController
-import com.example.gearlistapp.navigation.Screen
-import com.example.gearlistapp.presentation.dialogs.template.TemplateDetailDialog
+import com.example.gearlistapp.presentation.dialogs.actualtemplate.ActualTemplateDetailDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialog
 
 /**
- * A sablonok listajat megjelenito kepernyo
+ * Az aktualis sablonok listajat megjelenito kepernyo
  * @param gearViewModel a felszerelesekhez tartozo ViewModel
  * @param categoryViewModel a kategoriakhoz tartozo ViewModel
  * @param locationViewModel a helyszinekhez tartozo ViewModel
@@ -81,12 +75,11 @@ import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialo
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TemplateListScreen(
+fun ActualTemplateListScreen(
     gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
     categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
-    navController: NavHostController,
 ) {
 
 
@@ -94,14 +87,13 @@ fun TemplateListScreen(
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-    var showCreateTemplateDialog by remember { mutableStateOf(false) }
     var showIndicator by remember { mutableStateOf(false) }
     var selectedTemplate by remember { mutableStateOf<TemplateUi?>(null) }
 
     var searchText by remember { mutableStateOf("") }
     var selectedMin by remember { mutableIntStateOf(1) }
     var selectedMax by remember { mutableIntStateOf(30) }
-    var sortOrder by remember { mutableStateOf(SortOrder.NameAsc) }
+    var sortOrder by remember { mutableStateOf(SortOrder.DateAsc) }
     var showTemplateFilterDialog by remember { mutableStateOf(false) }
 
     var flipped by remember { mutableStateOf(false) }
@@ -133,13 +125,12 @@ fun TemplateListScreen(
                                 &&
                                 ((template.duration >= selectedMin && template.duration <= selectedMax)
                                         || (template.duration >= selectedMin && 30 == selectedMax))
-                                && (template.concrete == false)
 
                     }
                     .sortedWith { template1, template2 ->
                         when (sortOrder) {
-                            SortOrder.NameAsc -> template1.title.compareTo(template2.title)
-                            SortOrder.NameDesc -> template2.title.compareTo(template1.title)
+                            SortOrder.DateAsc -> template1.date.compareTo(template2.date)
+                            SortOrder.DateDesc -> template2.date.compareTo(template1.date)
                         }
                     }
             }
@@ -151,15 +142,6 @@ fun TemplateListScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize().padding(0.dp),
-        floatingActionButton = {
-            LargeFloatingActionButton(
-                onClick = { showCreateTemplateDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
-            }
-        }
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -208,9 +190,9 @@ fun TemplateListScreen(
                 IconButton(onClick = {
                     flipped = !flipped
                     sortOrder = if
-                                        (sortOrder == SortOrder.NameAsc) SortOrder.NameDesc
+                            (sortOrder == SortOrder.DateAsc) SortOrder.DateDesc
                     else
-                        SortOrder.NameAsc
+                        SortOrder.DateAsc
                 }) {
                     val rotation by animateFloatAsState(
                         targetValue = if (flipped) 180f else 0f,
@@ -252,20 +234,22 @@ fun TemplateListScreen(
                         if (filteredAndSortedTemplateList.isEmpty()) {
                             Text(text = stringResource(id = R.string.text_empty_template_list))
                         } else {
-
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                items(
-                                    filteredAndSortedTemplateList,
-                                    key = { template -> template.id }
-                                ) { template ->
-                                    TemplateItem(
-                                        template = template.asTemplateEntity(),
-                                        onClick = { selectedTemplate = template },
-                                        navController = navController
-                                    )
+                            Column {
+                                LazyColumn(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                ) {
+                                    items(
+                                        filteredAndSortedTemplateList,
+                                        key = { template -> template.id }
+                                    ) { template ->
+                                        if (template.concrete) {
+                                            ActualTemplateItem(
+                                                template = template.asTemplateEntity(),
+                                                onClick = { selectedTemplate = template }
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -273,35 +257,6 @@ fun TemplateListScreen(
                 }
             }
         }
-    }
-
-    if (showCreateTemplateDialog) {
-        TemplateCreateDialog(
-            onDismiss = { showCreateTemplateDialog = false },
-            onSave = { title, description, duration, selectedMap , piecesMap, backgroundColor ->
-                val gearList = mutableListOf<Int>()
-                coroutineScope.launch {
-                    for ((id, isSelected) in selectedMap) {
-                        if (isSelected) {
-                            val gear = gearViewModel.getById(id)
-                            gearViewModel.add(
-                                gear?.name ?: "",
-                                gear?.description ?: "",
-                                gear?.categoryId ?: 0,
-                                gear?.locationId ?: 0,
-                                false,
-                                piecesMap[id]?.toInt() ?: 1,
-                                gear?.id ?: -1,
-                            ) { id ->
-                                gearList.add(id)
-                            }
-                        }
-                    }
-                    templateViewModel.add(title, description, duration, gearList, backgroundColor)
-                    showCreateTemplateDialog = false
-                }
-            }
-        )
     }
 
     if (showTemplateFilterDialog) {
@@ -317,7 +272,7 @@ fun TemplateListScreen(
     }
 
     selectedTemplate?.let { template ->
-        TemplateDetailDialog(
+        ActualTemplateDetailDialog(   //TODO ActualTemplateDetailDialog
             templateId = template.id,
             onDismiss = { selectedTemplate = null },
             onDelete = { id ->
@@ -365,6 +320,6 @@ fun TemplateListScreen(
  * A felszerelesek rendezesi iranya
  */
 enum class SortOrder {
-    NameAsc,
-    NameDesc
+    DateAsc,
+    DateDesc
 }

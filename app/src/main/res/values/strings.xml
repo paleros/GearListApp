@@ -59,4 +59,8 @@
     <string name="pcs">pcs</string>
     <string name="pieces">Pieces</string>
     <string name="this_field_is_required">This field is required</string>
+    <string name="it_s_today">It\'s today!</string>
+    <string name="select_date">Select date</string>
+    <string name="create_actual_template">Create actual gear list</string>
+    <string name="select_start_date">Select start date</string>
 </resources>

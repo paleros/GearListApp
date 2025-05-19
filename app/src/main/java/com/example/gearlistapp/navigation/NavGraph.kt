@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gearlistapp.presentation.screens.gear.GearsHomeScreen
-import com.example.gearlistapp.presentation.screens.HomeScreen
+import com.example.gearlistapp.presentation.screens.actualtemplate.ActualTemplatesHomeScreen
 import com.example.gearlistapp.presentation.screens.template.TemplatesHomeScreen
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
@@ -35,7 +35,7 @@ fun NavGraph(
     NavHost(navController = navController,
         startDestination = Screen.HomeScreen.route,
         modifier = modifier) {
-        composable(Screen.HomeScreen.route) {HomeScreen(
+        composable(Screen.HomeScreen.route) {ActualTemplatesHomeScreen(
                                                             categoryViewModel = categoryViewModel,
                                                             gearViewModel = gearViewModel,
                                                             locationViewModel = locationViewModel,
@@ -48,6 +48,7 @@ fun NavGraph(
                                                             categoryViewModel = categoryViewModel,
                                                             gearViewModel = gearViewModel,
                                                             locationViewModel = locationViewModel,
+                                                            navController = navController,
         ) }
     }
 }

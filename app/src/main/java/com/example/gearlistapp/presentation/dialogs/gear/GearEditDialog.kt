@@ -72,7 +72,7 @@ fun GearEditDialog(
         }
     }
 
-    AlertDialog(
+    AlertDialog(    //TODO gear edit bemenet ellenorzes
         onDismissRequest = onDismiss,
         title = { Text(text = stringResource(id = R.string.edit_gear)) },
         text = {

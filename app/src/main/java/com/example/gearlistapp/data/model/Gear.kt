@@ -19,7 +19,7 @@ data class Gear(
     val description: String,
     val categoryId: Int,
     val locationId: Int,
-    val inPackage: Boolean,
+    var inPackage: Boolean,
     val pieces: Int = 1,
     val parent: Int = -1,
 ){

@@ -30,12 +30,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.gearlistapp.R
 import com.example.gearlistapp.data.entities.TemplateEntity
+import com.example.gearlistapp.navigation.Screen
+import com.example.gearlistapp.presentation.dialogs.actualtemplate.ActualTemplateCreateDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
@@ -57,12 +62,21 @@ fun TemplateItem(
     categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    navController: NavHostController,
     onClick: () -> Unit
 ) {
     var title = template.title
     var duration = template.duration
     var itemList = template.itemList
     val backgroundColor = Color(template.backgroundColor)
+    val darkerBackgroundColor = backgroundColor.copy(
+        red = backgroundColor.red * 0.8f,
+        green = backgroundColor.green * 0.8f,
+        blue = backgroundColor.blue * 0.8f
+    )
+
+    var showCreateActualDialog by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -73,18 +87,32 @@ fun TemplateItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = duration.toString() +" "+ stringResource(id = R.string.day),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Box(
+                    modifier = Modifier
+                        .background(darkerBackgroundColor, shape = RoundedCornerShape(8.dp))
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "$duration " +
+                                stringResource(R.string.day),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            }
 
             Row {
                 Box(modifier = Modifier.heightIn(min = 48.dp, max = 96.dp)) {
@@ -127,7 +155,9 @@ fun TemplateItem(
 
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
-                    onClick = { /* TODO create actual template */ },
+                    onClick = {
+                        showCreateActualDialog = true
+                    },
                     modifier = Modifier
                         .padding(start = 8.dp)
                         .size(40.dp)
@@ -144,5 +174,31 @@ fun TemplateItem(
                 }
             }
         }
+    }
+
+    if (showCreateActualDialog) {
+        ActualTemplateCreateDialog(
+            templateTitle = title,
+            onDismiss = { showCreateActualDialog = false },
+            onSave = { date ->
+                templateViewModel.add(
+                    title = title,
+                    description = template.description,
+                    duration = template.duration,
+                    backgroundColor = backgroundColor.toArgb(),
+                    itemList = template.itemList,
+                    date = date,
+                    concrete = true,
+                )
+                showCreateActualDialog = false
+                navController.navigate(Screen.HomeScreen.route) {
+                    launchSingleTop = true
+                    restoreState = true
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                }
+            }
+        )
     }
 }

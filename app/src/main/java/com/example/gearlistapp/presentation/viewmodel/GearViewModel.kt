@@ -141,4 +141,23 @@ class GearViewModel(
         }
     }
 
+    /**
+     * A felszereles csomagban levesenek atallitasa
+     * @param id a felszereles azonositoja
+     * @param newStatus az uj status
+     */
+    fun updateInPackage(id: Int, newStatus: Boolean) {
+        viewModelScope.launch {
+            val gear = try {
+                gearOperations.load(id).getOrNull()
+            } catch (_: Exception) {
+                null
+            }
+            if (gear != null) {
+                gear.inPackage = newStatus
+                gearOperations.update(gear)
+                loadGears()
+            }
+        }
+    }
 }

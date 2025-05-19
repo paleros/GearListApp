@@ -19,7 +19,7 @@ private val DarkColorScheme = darkColorScheme(
     onPrimary = AppBeige,
     onSecondary = AppKhaki,
     onBackground = AppKhaki,
-    onSurface = AppSand
+    onSurface = AppSand,
 )
 
 private val LightColorScheme = lightColorScheme(
