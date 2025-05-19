@@ -272,7 +272,7 @@ fun ActualTemplateListScreen(
     }
 
     selectedTemplate?.let { template ->
-        ActualTemplateDetailDialog(   //TODO ActualTemplateDetailDialog
+        ActualTemplateDetailDialog(
             templateId = template.id,
             onDismiss = { selectedTemplate = null },
             onDelete = { id ->

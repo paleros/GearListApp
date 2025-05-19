@@ -70,6 +70,7 @@ fun ActualTemplateDetailDialog(
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
+    var showReadyDialog by remember { mutableStateOf(false) }
 
     var template by remember {mutableStateOf<Template?>(null)}
     var templateGearList by remember { mutableStateOf<List<Int>>(emptyList()) }
@@ -189,7 +190,11 @@ fun ActualTemplateDetailDialog(
                                 onCheckedChange = { isChecked ->
                                     itemChecked = isChecked
                                     gearViewModel.updateInPackage(item, isChecked)
-                                    //TODO actual template törlése, ha mindegyik be van pakolva
+                                    gearViewModel.checkIfAllInPackage(templateGearList) { allChecked ->
+                                        if (allChecked) {
+                                            showReadyDialog = true
+                                        }
+                                    }
                                 }
                             )
 
@@ -259,6 +264,18 @@ fun ActualTemplateDetailDialog(
                 onEdit(id, title, description, duration, selectedMap, piecesMap, backgroundColor)
                 showEditDialog = false
                 refreshTemplate()
+            }
+        )
+    }
+
+    if (showReadyDialog) {
+        AllInPackageDialog(
+            onDismiss = { showReadyDialog = false
+                templateGearList.forEach { gear ->
+                    gearViewModel.updateInPackage(gear, false)
+                }
+                templateViewModel.delete(templateId)
+                onDismiss()
             }
         )
     }

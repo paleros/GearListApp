@@ -160,4 +160,18 @@ class GearViewModel(
             }
         }
     }
+
+    /**
+     * ellenorzi, hogy mindegyik elem be van-e pakolva
+     * @param ids a felszerelesek azonositoja
+     * @param onResult a callback, amely visszaadja, hogy mindegyik elem be van-e pakolva
+     */
+    fun checkIfAllInPackage(ids: List<Int>, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val allInPackage = ids.all { id ->
+                gearOperations.load(id).getOrNull()?.inPackage == true
+            }
+            onResult(allInPackage)
+        }
+    }
 }

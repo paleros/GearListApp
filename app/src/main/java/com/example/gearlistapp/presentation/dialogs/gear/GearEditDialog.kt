@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -58,6 +59,9 @@ fun GearEditDialog(
     var description by remember { mutableStateOf(currentDescription) }
     var categoryId by remember { mutableStateOf(currentCategoryId.toString()) }
     var locationId by remember { mutableStateOf(currentLocationId.toString()) }
+    var nameIsError by remember { mutableStateOf(false) }
+    var categoryIsError = remember { mutableStateOf(false) }
+    var locationIsError = remember { mutableStateOf(false) }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -72,17 +76,27 @@ fun GearEditDialog(
         }
     }
 
-    AlertDialog(    //TODO gear edit bemenet ellenorzes
+    AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = stringResource(id = R.string.edit_gear)) },
         text = {
             Column {
                 TextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = { name = it
+                        nameIsError = it.isBlank()},
                     label = { Text(stringResource(id = R.string.name)) },
-                    modifier = Modifier.fillMaxWidth()
+                    isError = nameIsError,
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
                 )
+                if (nameIsError) {
+                    Text(
+                        text = stringResource(id = R.string.this_field_is_required),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = description,
@@ -98,26 +112,33 @@ fun GearEditDialog(
                     locationViewModel = locationViewModel,
                     onCategorySelected = { categoryId = it.toString() },
                     previousCategory = currentCategoryId.toString(),
-                )
+                    isError = categoryIsError,
+                    )
                 Spacer(modifier = Modifier.height(8.dp))
                 LocationDropdown(
                     categoryViewModel = categoryViewModel,
                     gearViewModel = gearViewModel,
                     locationViewModel = locationViewModel,
                     onLocationSelected = { locationId = it.toString() },
-                    previousLocation = currentLocationId.toString()
-                )
+                    previousLocation = currentLocationId.toString(),
+                    isError = categoryIsError,
+                    )
             }
         },
         confirmButton = {
             TextButton(onClick = {
-                onEdit(
-                    gearId,
-                    name,
-                    description,
-                    categoryId.toInt(),
-                    locationId.toInt()
-                )
+                nameIsError = name.isBlank()
+                categoryIsError.value = categoryId.isBlank()
+                locationIsError.value = locationId.isBlank()
+                if (!nameIsError && !categoryIsError.value && !locationIsError.value) {
+                    onEdit(
+                        gearId,
+                        name,
+                        description,
+                        categoryId.toInt(),
+                        locationId.toInt()
+                    )
+                }
             }) {
                 Text(stringResource(id = R.string.save))
             }

@@ -63,4 +63,7 @@
     <string name="select_date">Select date</string>
     <string name="create_actual_template">Create actual gear list</string>
     <string name="select_start_date">Select start date</string>
+    <string name="you_are_ready">You are ready!</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="all_gear_is_in_the_package">All gear is in the package.</string>
 </resources>
