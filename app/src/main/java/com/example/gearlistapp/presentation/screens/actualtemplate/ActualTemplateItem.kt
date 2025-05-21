@@ -31,10 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,7 +42,6 @@ import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
-import com.example.gearlistapp.ui.theme.GearListAppTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

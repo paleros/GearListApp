@@ -35,6 +35,7 @@ import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 import com.example.gearlistapp.ui.common.ColorPickerDropdown
 import com.example.gearlistapp.ui.common.GearSelector
+import com.example.gearlistapp.ui.common.SimpleDatePicker
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -125,11 +126,11 @@ fun TemplateEditDialog(
             }
         }
     }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = stringResource(id = R.string.edit_template)) },
         text = {
+
             Column {
                 TextField(
                     value = title,
@@ -174,7 +175,16 @@ fun TemplateEditDialog(
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-                //TODO datumvalaszto, ha konkret
+                if (concrete == true) {
+                    val parts = date.split("-")
+
+                    SimpleDatePicker(
+                        date = date,
+                        onYearSelected = { date = it + "-" + parts[1] + "-" + parts[2] },
+                        onMonthSelected = { date = parts[0] + "-" + it + "-" + parts[2] },
+                        onDaySelected = { date = parts[0] + "-" + parts[1] + "-" + it },
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(8.dp))
                 ColorPickerDropdown(

@@ -299,8 +299,7 @@ fun ActualTemplateListScreen(
                     for ((id, isSelected) in selectedMap) {
                         if (isSelected) {
                             val gear = gearViewModel.getById(id)
-                            val newGear = GearUi(
-                                id,
+                            gearViewModel.add(
                                 gear?.name ?: "",
                                 gear?.description ?: "",
                                 gear?.categoryId ?: 0,
@@ -308,8 +307,9 @@ fun ActualTemplateListScreen(
                                 gear?.inPackage == true,
                                 piecesMap[id]?.toInt() ?: 1,
                                 gear?.id ?: -1,)
-                            gearViewModel.update(newGear)
-                            gearList.add(id)
+                            { id ->
+                                gearList.add(id)
+                            }
                         }
                     }
 

@@ -49,6 +49,7 @@ import com.example.gearlistapp.R
 import com.example.gearlistapp.data.model.Template
 import com.example.gearlistapp.presentation.dialogs.LocationFilterDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateEditDialog
+import com.example.gearlistapp.presentation.screens.actualtemplate.formatDate
 import com.example.gearlistapp.presentation.screens.actualtemplate.isToday
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
@@ -133,30 +134,46 @@ fun ActualTemplateDetailDialog(
                             color = Color.White
                         )
                     }
-                    if (isToday(template?.date ?: "1999-01-01")) {
-                        Spacer(modifier = Modifier.width(6.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Row(modifier = Modifier.fillMaxWidth()) {
                         Box(
                             modifier = Modifier
-                                .background(
-                                    MaterialTheme.colorScheme.error,
-                                    shape = RoundedCornerShape(8.dp)
-                                )
+                                .background(darkerBackgroundColor, shape = RoundedCornerShape(8.dp))
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            Row {
-                                Icon(
-                                    imageVector = Icons.Default.Warning,
-                                    contentDescription = "Warning",
-                                    tint = Color.White,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    text = stringResource(R.string.it_s_today),
-                                    fontSize = 15.sp,
-                                    color = Color.White
-                                )
-                            }
+                            Text(
+                                text = formatDate(template?.date ?: "1999-01-01"),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                if (isToday(template?.date ?: "1999-01-01")) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                MaterialTheme.colorScheme.error,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = "Warning",
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = stringResource(R.string.it_s_today),
+                                fontSize = 15.sp,
+                                color = Color.White
+                            )
                         }
                     }
                 }

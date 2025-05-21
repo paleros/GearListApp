@@ -183,7 +183,8 @@ class GearViewModel(
                     null
                 }
             }
-            var percentage = countTrue * 100 / (countTrue + countFalse)
+            val percentage = if ((countTrue + countFalse) != 0) (countTrue * 100) / (countTrue + countFalse) else 0
+
             onResult(percentage)
         }
     }

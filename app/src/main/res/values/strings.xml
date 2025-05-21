@@ -66,4 +66,8 @@
     <string name="you_are_ready">You are ready!</string>
     <string name="congratulations">Congratulations!</string>
     <string name="all_gear_is_in_the_package">All gear is in the package.</string>
+    <string name="year">Year</string>
+    <string name="month">Month</string>
+    <string name="Day">Day</string>
+    <string name="date">Date</string>
 </resources>

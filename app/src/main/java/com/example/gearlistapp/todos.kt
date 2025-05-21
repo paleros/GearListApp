@@ -4,7 +4,10 @@ package com.example.gearlistapp
 
 //TODO nem lehet két ugyanolyan nevű
 //TODO export import
+//TODO ertesites
+//TODO log warningok
 
 //------------
 //TODO színek
 //TODO iconok
+//TODO nyelvek
