@@ -55,7 +55,7 @@ fun TemplateEditDialog(
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
     gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
     onDismiss: () -> Unit,
-    onEdit: (Int, String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int) -> Unit
+    onEdit: (Int, String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int, String) -> Unit
 ) {
     //TODO a felszereles lista modositasokor nem mindig ment helyesen
     var currentTemplate by remember { mutableStateOf<Template?>(null) }
@@ -64,6 +64,8 @@ fun TemplateEditDialog(
     var duration by remember { mutableStateOf("") }
     var backgroundColor by remember { mutableIntStateOf(Color.White.toArgb()) }
     var itemList by remember { mutableStateOf(emptyList<Int>()) }
+    var date by remember { mutableStateOf("") }
+    var concrete by remember { mutableStateOf(false) }
 
     var currentSelectedMap = remember { mutableStateMapOf<Int, Boolean>() }
     var currentPiecesMap = remember { mutableStateMapOf<Int, String>() }
@@ -86,6 +88,8 @@ fun TemplateEditDialog(
             duration = it.duration.toString()
             backgroundColor = it.backgroundColor
             itemList = it.itemList
+            date = it.date
+            concrete = it.concrete
 
             val gearState = gearViewModel.state.first { state ->
                 state is GearListState.Result } as GearListState.Result
@@ -170,6 +174,7 @@ fun TemplateEditDialog(
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
+                //TODO datumvalaszto, ha konkret
 
                 Spacer(modifier = Modifier.height(8.dp))
                 ColorPickerDropdown(
@@ -196,11 +201,14 @@ fun TemplateEditDialog(
                             duration.toIntOrNull() ?: 0,
                             currentSelectedMap,
                             currentPiecesMap,
-                            backgroundColor
+                            backgroundColor,
+                            date
                         )
-                        for (id in itemList) {
-                            gearViewModel.getById(id){
-                                gearViewModel.delete(id)
+                        if (!concrete) {
+                            for (id in itemList) {
+                                gearViewModel.getById(id) {
+                                    gearViewModel.delete(id)
+                                }
                             }
                         }
                     }

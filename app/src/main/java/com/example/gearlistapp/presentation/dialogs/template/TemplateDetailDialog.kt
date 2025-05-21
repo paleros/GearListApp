@@ -204,7 +204,7 @@ fun TemplateDetailDialog(
             templateId = template?.id ?: -1,
             templateViewModel = templateViewModel,
             onDismiss = { showEditDialog = false },
-            onEdit = { id, title, description, duration, selectedMap, piecesMap, backgroundColor ->
+            onEdit = { id, title, description, duration, selectedMap, piecesMap, backgroundColor, date ->
                 onEdit(id, title, description, duration, selectedMap, piecesMap, backgroundColor)
                 showEditDialog = false
                 refreshTemplate()

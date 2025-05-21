@@ -67,6 +67,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import com.example.gearlistapp.presentation.dialogs.actualtemplate.ActualTemplateDetailDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialog
+import com.example.gearlistapp.ui.model.GearUi
 
 /**
  * Az aktualis sablonok listajat megjelenito kepernyo
@@ -292,28 +293,28 @@ fun ActualTemplateListScreen(
                 templateViewModel.delete(id)
                 selectedTemplate = null
             },
-            onEdit = { id, title, description, duration, selectedMap , piecesMap, backgroundColor ->
+            onEdit = { id, title, description, duration, selectedMap , piecesMap, backgroundColor, date ->
                 val gearList = mutableListOf<Int>()
                 coroutineScope.launch {
                     for ((id, isSelected) in selectedMap) {
                         if (isSelected) {
                             val gear = gearViewModel.getById(id)
-                            gearViewModel.add(
+                            val newGear = GearUi(
+                                id,
                                 gear?.name ?: "",
                                 gear?.description ?: "",
                                 gear?.categoryId ?: 0,
                                 gear?.locationId ?: 0,
-                                false,
+                                gear?.inPackage == true,
                                 piecesMap[id]?.toInt() ?: 1,
-                                gear?.id ?: -1,
-                            ) { id ->
-                                gearList.add(id)
-                            }
+                                gear?.id ?: -1,)
+                            gearViewModel.update(newGear)
+                            gearList.add(id)
                         }
                     }
 
                     val newTemplate =
-                        TemplateUi(id, title, description, duration, gearList, backgroundColor)
+                        TemplateUi(id, title, description, duration, gearList, backgroundColor, date, true)
                     templateViewModel.update(newTemplate)
                     selectedTemplate = null
                 }

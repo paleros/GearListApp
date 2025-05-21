@@ -70,7 +70,7 @@ fun ActualTemplateDetailDialog(
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
     onDismiss: () -> Unit,
     onDelete: (Int) -> Unit,
-    onEdit: (Int, String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int) -> Unit
+    onEdit: (Int, String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int, String) -> Unit
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -161,7 +161,6 @@ fun ActualTemplateDetailDialog(
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-//TODO edit gomb
                 Text(
                     text = stringResource(R.string.description) + ":",
                     fontSize = 15.sp,
@@ -301,8 +300,8 @@ fun ActualTemplateDetailDialog(
             templateId = template?.id ?: -1,
             templateViewModel = templateViewModel,
             onDismiss = { showEditDialog = false },
-            onEdit = { id, title, description, duration, selectedMap, piecesMap, backgroundColor ->
-                onEdit(id, title, description, duration, selectedMap, piecesMap, backgroundColor)
+            onEdit = { id, title, description, duration, selectedMap, piecesMap, backgroundColor, date ->
+                onEdit(id, title, description, duration, selectedMap, piecesMap, backgroundColor, date)
                 showEditDialog = false
                 refreshTemplate()
             }
