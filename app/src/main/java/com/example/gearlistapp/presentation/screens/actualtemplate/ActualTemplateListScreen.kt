@@ -62,7 +62,9 @@ import com.example.gearlistapp.ui.model.TemplateUi
 import com.example.gearlistapp.ui.model.asTemplateEntity
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import com.example.gearlistapp.presentation.dialogs.actualtemplate.ActualTemplateDetailDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialog
 
@@ -82,7 +84,6 @@ fun ActualTemplateListScreen(
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
 ) {
 
-
     val templateList = templateViewModel.state.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
@@ -98,6 +99,8 @@ fun ActualTemplateListScreen(
 
     var flipped by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+
+    val refreshKeys = remember { mutableStateMapOf<Int, Int>() }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -246,7 +249,8 @@ fun ActualTemplateListScreen(
                                         if (template.concrete) {
                                             ActualTemplateItem(
                                                 template = template.asTemplateEntity(),
-                                                onClick = { selectedTemplate = template }
+                                                onClick = { selectedTemplate = template },
+                                                refreshKey = refreshKeys[template.id] ?: 0,
                                             )
                                         }
                                     }
@@ -274,7 +278,9 @@ fun ActualTemplateListScreen(
     selectedTemplate?.let { template ->
         ActualTemplateDetailDialog(
             templateId = template.id,
-            onDismiss = { selectedTemplate = null },
+            onDismiss = { selectedTemplate = null
+                refreshKeys[template.id] = (refreshKeys[template.id] ?: 0) + 1
+                        },
             onDelete = { id ->
                 var gears : List<Int> = emptyList()
                 templateViewModel.getById(id){template ->

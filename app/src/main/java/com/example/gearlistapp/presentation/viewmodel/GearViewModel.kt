@@ -161,17 +161,30 @@ class GearViewModel(
         }
     }
 
+
     /**
      * ellenorzi, hogy mindegyik elem be van-e pakolva
      * @param ids a felszerelesek azonositoja
-     * @param onResult a callback, amely visszaadja, hogy mindegyik elem be van-e pakolva
+     * @param onResult a callback, amely visszaadja, hogy hany szazalek van-e pakolva
      */
-    fun checkIfAllInPackage(ids: List<Int>, onResult: (Boolean) -> Unit) {
+    fun checkIfAllInPackage(ids: List<Int>, onResult: (Int) -> Unit) {
+        var countTrue = 0
+        var countFalse = 0
+
         viewModelScope.launch {
-            val allInPackage = ids.all { id ->
-                gearOperations.load(id).getOrNull()?.inPackage == true
+            ids.forEach { id ->
+                try {
+                    if (gearOperations.load(id).getOrNull()?.inPackage == true) {
+                        countTrue++
+                    } else {
+                        countFalse++
+                    }
+                }  catch (_: Exception) {
+                    null
+                }
             }
-            onResult(allInPackage)
+            var percentage = countTrue * 100 / (countTrue + countFalse)
+            onResult(percentage)
         }
     }
 }

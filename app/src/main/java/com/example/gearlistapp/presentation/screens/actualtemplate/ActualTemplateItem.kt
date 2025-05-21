@@ -21,7 +21,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -62,6 +64,7 @@ fun ActualTemplateItem(
     categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
     locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
     templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    refreshKey: Int,
     onClick: () -> Unit
 ) {
     var title = template.title
@@ -70,12 +73,24 @@ fun ActualTemplateItem(
     var date = template.date
     var itemList = template.itemList
     val backgroundColor = Color(template.backgroundColor)
+    val percentage = remember { mutableIntStateOf(0) }
 
     val darkerBackgroundColor = backgroundColor.copy(
         red = backgroundColor.red * 0.8f,
         green = backgroundColor.green * 0.8f,
         blue = backgroundColor.blue * 0.8f
     )
+
+    LaunchedEffect(refreshKey) {
+        gearViewModel.checkIfAllInPackage(itemList) { p ->
+            percentage.intValue = p
+        }
+    }
+    LaunchedEffect(itemList) {
+        gearViewModel.checkIfAllInPackage(itemList) { p ->
+            percentage.intValue = p
+        }
+    }
 
     Card(
         modifier = Modifier
@@ -120,17 +135,19 @@ fun ActualTemplateItem(
                     fontSize = 15.sp,
                 )
                 Spacer(modifier = Modifier.height(5.dp))
-                Box(
-                    modifier = Modifier
-                        .background(darkerBackgroundColor, shape = RoundedCornerShape(8.dp))
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = formatDate(date),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Box(
+                        modifier = Modifier
+                            .background(darkerBackgroundColor, shape = RoundedCornerShape(8.dp))
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = formatDate(date),
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                 }
 
                 if (isToday(date)){
@@ -201,6 +218,19 @@ fun ActualTemplateItem(
                         )
                     }
                 }
+
+                Box(
+                    modifier = Modifier
+                        .background(darkerBackgroundColor, shape = RoundedCornerShape(8.dp))
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = "${percentage.intValue} %",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
             }
         }
     }
@@ -228,25 +258,4 @@ fun formatDate(input: String): String {
     val outputFormatter = DateTimeFormatter.ofPattern("MM.dd.")
     val date = LocalDate.parse(input, inputFormatter)
     return date.format(outputFormatter)
-}
-
-/**
- * Preview a sablonok megjelenitesehez
- */
-@Preview
-@Composable
-fun ActualTemplateItemPreview() {
-    val template = TemplateEntity(
-        id = 1,
-        title = "Test Template",
-        description = "This is a test template",
-        duration = 5,
-        date = "2025-05-17",
-        itemList = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
-        backgroundColor = Color(0xFF6200EE).toArgb(),
-        concrete = true
-    )
-    GearListAppTheme {
-        ActualTemplateItem(template) {}
-    }
 }

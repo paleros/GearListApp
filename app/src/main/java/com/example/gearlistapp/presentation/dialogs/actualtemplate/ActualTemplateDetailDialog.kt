@@ -231,7 +231,7 @@ fun ActualTemplateDetailDialog(
                                         itemChecked = isChecked
                                         gearViewModel.updateInPackage(item, isChecked)
                                         gearViewModel.checkIfAllInPackage(templateGearList) { allChecked ->
-                                            if (allChecked) {
+                                            if (allChecked == 100) {
                                                 showReadyDialog = true
                                             }
                                         }
