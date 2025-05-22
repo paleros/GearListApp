@@ -58,10 +58,10 @@ import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 @Composable
 fun TemplateItem(
     template: TemplateEntity,
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
+    templateViewModel: TemplateViewModel,
     navController: NavHostController,
     onClick: () -> Unit
 ) {
@@ -179,6 +179,8 @@ fun TemplateItem(
     if (showCreateActualDialog) {
         ActualTemplateCreateDialog(
             templateTitle = title,
+            gearViewModel = gearViewModel,
+            templateViewModel = templateViewModel,
             onDismiss = { showCreateActualDialog = false },
             onSave = { date ->
                 templateViewModel.add(

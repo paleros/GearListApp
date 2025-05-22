@@ -26,13 +26,14 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.data.model.Gear
 import com.example.gearlistapp.data.model.Template
 import com.example.gearlistapp.presentation.viewmodel.GearListState
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.common.ColorPickerDropdown
 import com.example.gearlistapp.ui.common.GearSelector
 import com.example.gearlistapp.ui.common.SimpleDatePicker
@@ -46,6 +47,8 @@ import kotlin.collections.set
  * @param templateId a sablon azonositoja
  * @param templateViewModel a sablon viewmodelje
  * @param gearViewModel a felszereles viewmodelje
+ * @param categoryViewModel a kategoria viewmodelje
+ * @param locationViewModel a helyszin viewmodelje
  * @param onDismiss a dialogus bezarasa
  * @param onEdit a sablon modositasa
  */
@@ -53,12 +56,13 @@ import kotlin.collections.set
 @Composable
 fun TemplateEditDialog(
     templateId: Int,
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    templateViewModel: TemplateViewModel,
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onDismiss: () -> Unit,
     onEdit: (Int, String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int, String) -> Unit
 ) {
-    //TODO a felszereles lista modositasokor nem mindig ment helyesen
     var currentTemplate by remember { mutableStateOf<Template?>(null) }
     var title by remember { mutableStateOf<String>("") }
     var description by remember { mutableStateOf<String>("") }
@@ -193,8 +197,11 @@ fun TemplateEditDialog(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 GearSelector(
+                    gearViewModel = gearViewModel,
                     selectedMap = currentSelectedMap,
                     piecesMap = currentPiecesMap,
+                    categoryViewModel = categoryViewModel,
+                    locationViewModel = locationViewModel,
                 )
             }
         },

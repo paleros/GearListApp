@@ -51,7 +51,9 @@ import com.example.gearlistapp.presentation.dialogs.LocationFilterDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateEditDialog
 import com.example.gearlistapp.presentation.screens.actualtemplate.formatDate
 import com.example.gearlistapp.presentation.screens.actualtemplate.isToday
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 
@@ -60,6 +62,8 @@ import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
  * @param templateId a sablon azonositoja
  * @param gearViewModel a felszereles viewmodelje
  * @param templateViewModel a sablon viewmodelje
+ * @param categoryViewModel a kategoria viewmodelje
+ * @param locationViewModel a helyszin viewmodelje
  * @param onDismiss a dialogus bezarasa
  * @param onDelete a sablon torlese
  * @param onEdit a sablon modositasa
@@ -67,8 +71,10 @@ import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 @Composable
 fun ActualTemplateDetailDialog(
     templateId: Int,
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    gearViewModel: GearViewModel,
+    templateViewModel: TemplateViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onDismiss: () -> Unit,
     onDelete: (Int) -> Unit,
     onEdit: (Int, String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int, String) -> Unit
@@ -321,7 +327,10 @@ fun ActualTemplateDetailDialog(
                 onEdit(id, title, description, duration, selectedMap, piecesMap, backgroundColor, date)
                 showEditDialog = false
                 refreshTemplate()
-            }
+            },
+            gearViewModel = gearViewModel,
+            categoryViewModel = categoryViewModel,
+            locationViewModel = locationViewModel,
         )
     }
 
@@ -348,6 +357,8 @@ fun ActualTemplateDetailDialog(
                 showFilterDialog = false
             },
             previousLocation = selectedLocation,
+            categoryViewModel = categoryViewModel,
+            locationViewModel = locationViewModel,
         )
     }
 }

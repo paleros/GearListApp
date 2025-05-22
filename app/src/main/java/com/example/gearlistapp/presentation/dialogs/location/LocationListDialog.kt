@@ -49,9 +49,9 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun LocationListDialog(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onDismiss: () -> Unit,
 ){
     val locationList = locationViewModel.state.collectAsStateWithLifecycle().value

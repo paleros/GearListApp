@@ -11,10 +11,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.common.CategoryDropdown
 
 /**
@@ -23,6 +23,7 @@ import com.example.gearlistapp.ui.common.CategoryDropdown
  * @param onCategorySelected a kategoria valasztasa
  * @param gearViewModel a felszereles viewmodelje
  * @param categoryViewModel a kategoria viewmodelje
+ * @param locationViewModel a helyszin viewmodelje
  * @param previousCategory az elozo kategoria
  * @param onDeleteFilters a filter torlese
  */
@@ -30,8 +31,9 @@ import com.example.gearlistapp.ui.common.CategoryDropdown
 fun CategoryFilterDialog(onDismiss: () -> Unit,
                                     onCategorySelected: (String) -> Unit,
                                     onDeleteFilters: () -> Unit,
-                                    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-                                    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
+                                    gearViewModel: GearViewModel,
+                                    categoryViewModel: CategoryViewModel,
+                                    locationViewModel: LocationViewModel,
                                     previousCategory: String = "null",
 ) {
 
@@ -53,6 +55,7 @@ fun CategoryFilterDialog(onDismiss: () -> Unit,
                     gearViewModel = gearViewModel,
                     previousCategory = previousCategory,
                     onCategorySelected = { selectedCategory = it.toString()},
+                    locationViewModel = locationViewModel,
                 )
             }
         },

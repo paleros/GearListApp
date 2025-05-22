@@ -38,7 +38,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.data.model.Template
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 
@@ -47,6 +49,8 @@ import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
  * @param templateId a sablon azonositoja
  * @param gearViewModel a felszereles viewmodelje
  * @param templateViewModel a sablon viewmodelje
+ * @param categoryViewModel a kategoria viewmodelje
+ * @param locationViewModel a helyszin viewmodelje
  * @param onDismiss a dialogus bezarasa
  * @param onDelete a sablon torlese
  * @param onEdit a sablon modositasa
@@ -54,8 +58,10 @@ import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 @Composable
 fun TemplateDetailDialog(
     templateId: Int,
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    gearViewModel: GearViewModel,
+    templateViewModel: TemplateViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onDismiss: () -> Unit,
     onDelete: (Int) -> Unit,
     onEdit: (Int, String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int) -> Unit
@@ -208,7 +214,10 @@ fun TemplateDetailDialog(
                 onEdit(id, title, description, duration, selectedMap, piecesMap, backgroundColor)
                 showEditDialog = false
                 refreshTemplate()
-            }
+            },
+            gearViewModel = gearViewModel,
+            categoryViewModel = categoryViewModel,
+            locationViewModel = locationViewModel,
         )
     }
 }

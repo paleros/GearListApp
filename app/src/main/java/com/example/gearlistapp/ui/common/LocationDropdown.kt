@@ -52,9 +52,9 @@ import com.example.gearlistapp.ui.model.toUiText
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationDropdown(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onLocationSelected: (Int) -> Unit,
     previousLocation: String = "null",
     isError: MutableState<Boolean> = mutableStateOf(false),

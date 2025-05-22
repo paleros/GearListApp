@@ -57,10 +57,10 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ActualTemplateItem(
     template: TemplateEntity,
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
+    templateViewModel: TemplateViewModel,
     refreshKey: Int,
     onClick: () -> Unit
 ) {

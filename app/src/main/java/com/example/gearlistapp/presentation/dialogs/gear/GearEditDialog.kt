@@ -49,9 +49,9 @@ fun GearEditDialog(
     currentDescription: String,
     currentCategoryId: Int,
     currentLocationId: Int,
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onDismiss: () -> Unit,
     onEdit: (Int, String, String, Int, Int) -> Unit
 ) {

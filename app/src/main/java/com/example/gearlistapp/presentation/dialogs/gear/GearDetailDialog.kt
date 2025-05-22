@@ -56,9 +56,9 @@ import com.example.gearlistapp.ui.model.asLocation
 @Composable
 fun GearDetailDialog(
     gearId: Int,
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onDismiss: () -> Unit,
     onDelete: (Int) -> Unit,
     onEdit: (Int, String, String, Int, Int) -> Unit,

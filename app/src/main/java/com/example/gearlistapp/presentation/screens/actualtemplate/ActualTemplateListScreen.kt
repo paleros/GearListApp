@@ -27,7 +27,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.ui.model.toUiText
@@ -62,12 +61,15 @@ import com.example.gearlistapp.ui.model.TemplateUi
 import com.example.gearlistapp.ui.model.asTemplateEntity
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import com.example.gearlistapp.presentation.dialogs.actualtemplate.ActualTemplateDetailDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialog
-import com.example.gearlistapp.ui.model.GearUi
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
  * Az aktualis sablonok listajat megjelenito kepernyo
@@ -76,13 +78,13 @@ import com.example.gearlistapp.ui.model.GearUi
  * @param locationViewModel a helyszinekhez tartozo ViewModel
  * @param templateViewModel a sablonokhoz tartozo ViewModel
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun ActualTemplateListScreen(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
+    templateViewModel: TemplateViewModel,
 ) {
 
     val templateList = templateViewModel.state.collectAsStateWithLifecycle().value
@@ -252,6 +254,10 @@ fun ActualTemplateListScreen(
                                                 template = template.asTemplateEntity(),
                                                 onClick = { selectedTemplate = template },
                                                 refreshKey = refreshKeys[template.id] ?: 0,
+                                                categoryViewModel = categoryViewModel,
+                                                locationViewModel = locationViewModel,
+                                                gearViewModel = gearViewModel,
+                                                templateViewModel = templateViewModel
                                             )
                                         }
                                     }
@@ -293,28 +299,51 @@ fun ActualTemplateListScreen(
                 templateViewModel.delete(id)
                 selectedTemplate = null
             },
-            onEdit = { id, title, description, duration, selectedMap , piecesMap, backgroundColor, date ->
-                val gearList = mutableListOf<Int>()
+            gearViewModel = gearViewModel,
+            templateViewModel = templateViewModel,
+            categoryViewModel = categoryViewModel,
+            locationViewModel = locationViewModel,
+            onEdit = { id, title, description, duration, selectedMap, piecesMap, backgroundColor, date ->
                 coroutineScope.launch {
-                    for ((id, isSelected) in selectedMap) {
+                    val deferredGearIds = mutableListOf<Deferred<Int>>()
+
+                    for ((gearId, isSelected) in selectedMap) {
                         if (isSelected) {
-                            val gear = gearViewModel.getById(id)
-                            gearViewModel.add(
-                                gear?.name ?: "",
-                                gear?.description ?: "",
-                                gear?.categoryId ?: 0,
-                                gear?.locationId ?: 0,
-                                gear?.inPackage == true,
-                                piecesMap[id]?.toInt() ?: 1,
-                                gear?.id ?: -1,)
-                            { id ->
-                                gearList.add(id)
+                            val gear = gearViewModel.getById(gearId)
+
+                            val deferred = async {
+                                suspendCancellableCoroutine<Int> { cont ->
+                                    gearViewModel.add(
+                                        gear?.name ?: "",
+                                        gear?.description ?: "",
+                                        gear?.categoryId ?: 0,
+                                        gear?.locationId ?: 0,
+                                        gear?.inPackage == true,
+                                        piecesMap[gearId]?.toInt() ?: 1,
+                                        gear?.id ?: -1
+                                    ) { newId ->
+                                        cont.resume(newId, null)
+                                    }
+                                }
                             }
+
+                            deferredGearIds.add(deferred)
                         }
                     }
 
-                    val newTemplate =
-                        TemplateUi(id, title, description, duration, gearList, backgroundColor, date, true)
+                    val gearList = deferredGearIds.awaitAll()
+
+                    val newTemplate = TemplateUi(
+                        id = id,
+                        title = title,
+                        description = description,
+                        duration = duration,
+                        itemList = gearList,
+                        backgroundColor = backgroundColor,
+                        date = date,
+                        concrete = true
+                    )
+
                     templateViewModel.update(newTemplate)
                     selectedTemplate = null
                 }

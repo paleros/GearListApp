@@ -36,8 +36,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ActualTemplateCreateDialog(
     templateTitle: String,
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    templateViewModel: TemplateViewModel,
+    gearViewModel: GearViewModel,
     onDismiss: () -> Unit,
     onSave: (String) -> Unit
 ) {

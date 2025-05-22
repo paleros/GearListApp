@@ -76,9 +76,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GearListScreen(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory)
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel
 ) {
 
 
@@ -252,7 +252,10 @@ fun GearListScreen(
                                         if (gear.parent == -1) {
                                             GearItem(
                                                 gear.asGearEntity(),
-                                                onClick = { selectedGear = gear })
+                                                onClick = { selectedGear = gear },
+                                                categoryViewModel = categoryViewModel,
+                                                locationViewModel = locationViewModel,
+                                            )
                                         }
                                     }
                                 }
@@ -308,7 +311,10 @@ fun GearListScreen(
             onEdit = { id, name, description, categoryId, locationId ->
                 val newGear = GearUi(id, name, description, categoryId, locationId)
                 gearViewModel.update(newGear)
-            }
+            },
+            gearViewModel = gearViewModel,
+            categoryViewModel = categoryViewModel,
+            locationViewModel = locationViewModel,
         )
     }
 }

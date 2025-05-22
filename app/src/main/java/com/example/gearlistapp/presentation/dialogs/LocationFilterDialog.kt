@@ -11,8 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.common.LocationDropdown
@@ -23,6 +23,7 @@ import com.example.gearlistapp.ui.common.LocationDropdown
  * @param onLocationSelected a kategoria valasztasa
  * @param gearViewModel a felszereles viewmodelje
  * @param locationViewModel a kategoria viewmodelje
+ * @param categoryViewModel a helyszin viewmodelje
  * @param previousLocation az elozo kategoria
  * @param onDeleteFilters a filter torlese
  */
@@ -30,8 +31,9 @@ import com.example.gearlistapp.ui.common.LocationDropdown
 fun LocationFilterDialog(onDismiss: () -> Unit,
                                     onLocationSelected: (String) -> Unit,
                                     onDeleteFilters: () -> Unit,
-                                    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-                                    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+                                    gearViewModel: GearViewModel,
+                                    locationViewModel: LocationViewModel,
+                                    categoryViewModel: CategoryViewModel,
                                     previousLocation: String = "null",
 ) {
 
@@ -53,6 +55,7 @@ fun LocationFilterDialog(onDismiss: () -> Unit,
                     gearViewModel = gearViewModel,
                     previousLocation = previousLocation,
                     onLocationSelected = { selectedLocation = it.toString()},
+                    categoryViewModel = categoryViewModel,
                 )
             }
         },

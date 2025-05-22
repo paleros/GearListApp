@@ -1,5 +1,6 @@
 package com.example.gearlistapp.presentation.screens.template
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -68,9 +69,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.navigation.NavHostController
+import com.example.gearlistapp.data.model.Template
 import com.example.gearlistapp.navigation.Screen
 import com.example.gearlistapp.presentation.dialogs.template.TemplateDetailDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialog
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
  * A sablonok listajat megjelenito kepernyo
@@ -79,13 +86,13 @@ import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialo
  * @param locationViewModel a helyszinekhez tartozo ViewModel
  * @param templateViewModel a sablonokhoz tartozo ViewModel
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun TemplateListScreen(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
+    templateViewModel: TemplateViewModel,
     navController: NavHostController,
 ) {
 
@@ -264,7 +271,11 @@ fun TemplateListScreen(
                                     TemplateItem(
                                         template = template.asTemplateEntity(),
                                         onClick = { selectedTemplate = template },
-                                        navController = navController
+                                        navController = navController,
+                                        gearViewModel = gearViewModel,
+                                        categoryViewModel = categoryViewModel,
+                                        locationViewModel = locationViewModel,
+                                        templateViewModel = templateViewModel,
                                     )
                                 }
                             }
@@ -276,28 +287,51 @@ fun TemplateListScreen(
     }
 
     if (showCreateTemplateDialog) {
+
         TemplateCreateDialog(
+            gearViewModel = gearViewModel,
+            templateViewModel = templateViewModel,
+            categoryViewModel = categoryViewModel,
+            locationViewModel = locationViewModel,
             onDismiss = { showCreateTemplateDialog = false },
             onSave = { title, description, duration, selectedMap , piecesMap, backgroundColor ->
-                val gearList = mutableListOf<Int>()
                 coroutineScope.launch {
-                    for ((id, isSelected) in selectedMap) {
+                    val deferredGearIds = mutableListOf<Deferred<Int>>()
+
+                    for ((gearId, isSelected) in selectedMap) {
                         if (isSelected) {
-                            val gear = gearViewModel.getById(id)
-                            gearViewModel.add(
-                                gear?.name ?: "",
-                                gear?.description ?: "",
-                                gear?.categoryId ?: 0,
-                                gear?.locationId ?: 0,
-                                false,
-                                piecesMap[id]?.toInt() ?: 1,
-                                gear?.id ?: -1,
-                            ) { id ->
-                                gearList.add(id)
+                            val gear = gearViewModel.getById(gearId)
+
+                            val deferred = async {
+                                suspendCancellableCoroutine<Int> { cont ->
+                                    gearViewModel.add(
+                                        gear?.name ?: "",
+                                        gear?.description ?: "",
+                                        gear?.categoryId ?: 0,
+                                        gear?.locationId ?: 0,
+                                        false,
+                                        piecesMap[gearId]?.toInt() ?: 1,
+                                        gear?.id ?: -1
+                                    ) { newId ->
+                                        cont.resume(newId, null)
+                                    }
+                                }
                             }
+
+                            deferredGearIds.add(deferred)
                         }
                     }
-                    templateViewModel.add(title, description, duration, gearList, backgroundColor)
+
+                    val gearList = deferredGearIds.awaitAll()
+
+                    templateViewModel.add(
+                        title = title,
+                        description = description,
+                        duration = duration,
+                        itemList = gearList,
+                        backgroundColor = backgroundColor
+                    )
+
                     showCreateTemplateDialog = false
                 }
             }
@@ -319,6 +353,10 @@ fun TemplateListScreen(
     selectedTemplate?.let { template ->
         TemplateDetailDialog(
             templateId = template.id,
+            gearViewModel = gearViewModel,
+            categoryViewModel = categoryViewModel,
+            templateViewModel = templateViewModel,
+            locationViewModel = locationViewModel,
             onDismiss = { selectedTemplate = null },
             onDelete = { id ->
                 var gears : List<Int> = emptyList()
@@ -332,24 +370,34 @@ fun TemplateListScreen(
                 selectedTemplate = null
             },
             onEdit = { id, title, description, duration, selectedMap , piecesMap, backgroundColor ->
-                val gearList = mutableListOf<Int>()
                 coroutineScope.launch {
-                    for ((id, isSelected) in selectedMap) {
+                    val deferredGearIds = mutableListOf<Deferred<Int>>()
+
+                    for ((gearId, isSelected) in selectedMap) {
                         if (isSelected) {
-                            val gear = gearViewModel.getById(id)
-                            gearViewModel.add(
-                                gear?.name ?: "",
-                                gear?.description ?: "",
-                                gear?.categoryId ?: 0,
-                                gear?.locationId ?: 0,
-                                false,
-                                piecesMap[id]?.toInt() ?: 1,
-                                gear?.id ?: -1,
-                            ) { id ->
-                                gearList.add(id)
+                            val gear = gearViewModel.getById(gearId)
+
+                            val deferred = async {
+                                suspendCancellableCoroutine<Int> { cont ->
+                                    gearViewModel.add(
+                                        gear?.name ?: "",
+                                        gear?.description ?: "",
+                                        gear?.categoryId ?: 0,
+                                        gear?.locationId ?: 0,
+                                        false,
+                                        piecesMap[gearId]?.toInt() ?: 1,
+                                        gear?.id ?: -1
+                                    ) { newId ->
+                                        cont.resume(newId, null)
+                                    }
+                                }
                             }
+                            deferredGearIds.add(deferred)
                         }
                     }
+
+                    /** Megvarja ameddig az osszes async coroutine befejezodik */
+                    val gearList = deferredGearIds.awaitAll()
 
                     val newTemplate =
                         TemplateUi(id, title, description, duration, gearList, backgroundColor)

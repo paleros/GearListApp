@@ -14,20 +14,23 @@ import com.example.gearlistapp.presentation.screens.template.TemplatesHomeScreen
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
+import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 
 /**
  * A navigacios grafot reprezentalo komponens.
  * @param gearViewModel a felszerelesekhez tartozo ViewModel
  * @param categoryViewModel a kategoriakhoz tartozo ViewModel
  * @param locationViewModel a helyszinekhez tartozo ViewModel
+ * @param templateViewModel a sablonokhoz tartozo ViewModel
  * @param navController a navigacios controller
  * @param modifier a modifier
  */
 @Composable
 fun NavGraph(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
+    templateViewModel: TemplateViewModel,
     navController: NavHostController = rememberNavController(),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -39,6 +42,7 @@ fun NavGraph(
                                                             categoryViewModel = categoryViewModel,
                                                             gearViewModel = gearViewModel,
                                                             locationViewModel = locationViewModel,
+                                                            templateViewModel = templateViewModel,
         ) }
         composable(Screen.GearsHomeScreen.route) {GearsHomeScreen(
                                                             categoryViewModel = categoryViewModel,
@@ -49,6 +53,7 @@ fun NavGraph(
                                                             gearViewModel = gearViewModel,
                                                             locationViewModel = locationViewModel,
                                                             navController = navController,
+                                                            templateViewModel = templateViewModel,
         ) }
     }
 }

@@ -14,9 +14,9 @@ import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
  */
 @Composable
 fun GearsHomeScreen(
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    categoryViewModel: CategoryViewModel,
+    gearViewModel: GearViewModel,
+    locationViewModel: LocationViewModel,
 ) {
 
     GearListScreen(

@@ -1,5 +1,7 @@
 package com.example.gearlistapp.presentation.screens
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,23 +37,27 @@ import com.example.gearlistapp.R
 import com.example.gearlistapp.navigation.NavGraph
 import com.example.gearlistapp.presentation.dialogs.AboutDialog
 import com.example.gearlistapp.presentation.dialogs.category.CategoryListDialog
+import com.example.gearlistapp.presentation.dialogs.exportimport.ExportDialog
 import com.example.gearlistapp.presentation.dialogs.location.LocationListDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
+import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 import com.example.gearlistapp.ui.common.BottomNavigationBar
 import com.example.gearlistapp.ui.common.MyTopAppBar
 import kotlinx.coroutines.launch
 
 /**
  * A navigacios savokat reprezentáló komponens.
+ * @param exportLauncher Az ActivityResultLauncher, amely kezeli az exportalast.
  */
 @Composable
-fun MainScreen() {
+fun MainScreen(exportLauncher: ActivityResultLauncher<Intent>) {
 
     val gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory)
     val categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory)
     val locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory)
+    val templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory)
 
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -65,6 +71,7 @@ fun MainScreen() {
                 gearViewModel = gearViewModel,
                 categoryViewModel = categoryViewModel,
                 locationViewModel = locationViewModel,
+                exportLauncher = exportLauncher,
             ) {
                 scope.launch { drawerState.close() }
             }
@@ -78,7 +85,8 @@ fun MainScreen() {
                 modifier = Modifier.padding(innerPadding),
                 gearViewModel = gearViewModel,
                 categoryViewModel = categoryViewModel,
-                locationViewModel = locationViewModel
+                locationViewModel = locationViewModel,
+                templateViewModel = templateViewModel,
             )
         }
     }
@@ -89,13 +97,15 @@ fun MainScreen() {
  * @param gearViewModel a felszerelesekhez tartozo ViewModel
  * @param categoryViewModel a kategoriakhoz tartozo ViewModel
  * @param locationViewModel a helyszinekhez tartozo ViewModel
+ * @param exportLauncher Az ActivityResultLauncher, amely kezeli az exportalast.
  * @param onClose a menu bezarasahoz
  */
 @Composable
 fun DrawerContent(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
+    exportLauncher: ActivityResultLauncher<Intent>,
     onClose: () -> Unit
 ) {
     gearViewModel.loadGears()
@@ -156,7 +166,10 @@ fun DrawerContent(
         )
     }
     if (showExportDialog) {
-        //ExportDialog(onDismiss = { showExportDialog = false }) TODO export
+        //ExportDialog(
+        //    onDismiss = { showExportDialog = false },
+        //    exportLauncher = exportLauncher
+        //)
     }
     if (showImportDialog) {
         //ImportDialog(onDismiss = { showImportDialog = false }) TODO import
@@ -183,13 +196,4 @@ fun DrawerMenuItem(@StringRes textRes: Int, onClick: () -> Unit) {
             color = MaterialTheme.colorScheme.onPrimary
         )
     }
-}
-
-/**
- * Preview fuggveny a MainScreen-hoz.
- */
-@Preview(showBackground = true)
-@Composable
-fun PreviewMainScreen() {
-    MainScreen()
 }

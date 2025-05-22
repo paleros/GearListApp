@@ -52,9 +52,8 @@ import com.example.gearlistapp.ui.model.asLocation
  */
 @Composable
 fun GearItem(gear: GearEntity,
-             gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-             categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-             locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+             categoryViewModel: CategoryViewModel,
+             locationViewModel: LocationViewModel,
              onClick: () -> Unit) {
 
     var category by remember { mutableStateOf<CategoryEntity?>(null) }

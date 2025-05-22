@@ -41,9 +41,9 @@ import com.example.gearlistapp.ui.common.LocationDropdown
  */
 @Composable
 fun GearCreateDialog(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onDismiss: () -> Unit, onSave: (String, String, Int, Int) -> Unit) {
 
     var name by remember { mutableStateOf("") }

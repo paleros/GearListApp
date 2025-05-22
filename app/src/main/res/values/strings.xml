@@ -70,4 +70,10 @@
     <string name="month">Month</string>
     <string name="Day">Day</string>
     <string name="date">Date</string>
+    <string name="export_database">Export database</string>
+    <string name="select_a_directory">Select a dierctory!</string>
+    <string name="export">Export</string>
+    <string name="export_successful">Export successful!</string>
+    <string name="failed_to_open_file">Failed to open file</string>
+    <string name="failed_to_create_file">Failed to create file</string>
 </resources>

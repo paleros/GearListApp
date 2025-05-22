@@ -2,7 +2,6 @@ package com.example.gearlistapp.presentation.screens.actualtemplate
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
@@ -17,10 +16,10 @@ import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
  */
 @Composable
 fun ActualTemplatesHomeScreen(
-    categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory),
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
-    locationViewModel: LocationViewModel = viewModel(factory = LocationViewModel.Factory),
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory)
+    categoryViewModel: CategoryViewModel,
+    gearViewModel: GearViewModel,
+    locationViewModel: LocationViewModel,
+    templateViewModel: TemplateViewModel
 ) {
     ActualTemplateListScreen(
         categoryViewModel = categoryViewModel,
@@ -28,13 +27,4 @@ fun ActualTemplatesHomeScreen(
         locationViewModel = locationViewModel,
         templateViewModel = templateViewModel,
     )
-}
-
-/**
- * Preview fuggveny a HomeScreen-hoz.
- */
-@Preview(showBackground = true)
-@Composable
-fun PreviewGearListsHomeScreen() {
-    ActualTemplatesHomeScreen()
 }

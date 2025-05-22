@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
@@ -47,16 +46,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.text.input.KeyboardType
 import com.example.gearlistapp.presentation.dialogs.CategoryFilterDialog
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 
 /**
  * A felszerelesek valaszto komponens
  * @param gearViewModel a felszerelesek viewmodelje
+ * @param categoryViewModel a kategoriak viewmodelje
+ * @param locationViewModel a helyszinek viewmodelje
  * @param selectedMap a valasztott felszerelesek id-jei
  * @param piecesMap a valasztott darabszamok
  */
 @Composable
 fun GearSelector(
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     piecesMap: SnapshotStateMap<Int, String>,
     selectedMap: SnapshotStateMap<Int, Boolean>,
 ) {
@@ -172,7 +177,7 @@ fun GearSelector(
                                     Text(text = gear.name)
                                     Spacer(modifier = Modifier.width(8.dp))
                                     TextField(
-                                        value = piecesMap[gear.id].toString(),
+                                        value = piecesMap[gear.id] ?: "1",
                                         onValueChange = { newValue ->
                                             piecesMap[gear.id] = newValue.toString()
                                         },
@@ -202,6 +207,8 @@ fun GearSelector(
                 showFilterDialog = false
             },
             previousCategory = selectedCategory,
+            categoryViewModel = categoryViewModel,
+            locationViewModel = locationViewModel,
         )
     }
 }

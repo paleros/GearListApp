@@ -16,19 +16,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearListState
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
+import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.presentation.viewmodel.TemplateViewModel
 import com.example.gearlistapp.ui.common.ColorPickerDropdown
 import com.example.gearlistapp.ui.common.GearSelector
@@ -37,13 +40,17 @@ import com.example.gearlistapp.ui.common.GearSelector
  * A sablon letrehozo dialogus
  * @param templateViewModel a sablon viewmodelje
  * @param gearViewModel a felszereles viewmodelje
+ * @param categoryViewModel a kategoria viewmodelje
+ * @param locationViewModel a helyszin viewmodelje
  * @param onDismiss a dialogus bezarasa
  * @param onSave a sablon elmentese
  */
 @Composable
 fun TemplateCreateDialog(
-    templateViewModel: TemplateViewModel = viewModel(factory = TemplateViewModel.Factory),
-    gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory),
+    templateViewModel: TemplateViewModel,
+    gearViewModel: GearViewModel,
+    categoryViewModel: CategoryViewModel,
+    locationViewModel: LocationViewModel,
     onDismiss: () -> Unit,
     onSave: (String, String, Int, SnapshotStateMap<Int, Boolean>, SnapshotStateMap<Int, String>, Int) -> Unit
 ) {
@@ -58,20 +65,14 @@ fun TemplateCreateDialog(
     var dayIsError by remember { mutableStateOf(false) }
 
     /** Feltolti a listat az elemekkel*/
-    when (gearList) {
-        is GearListState.Loading -> {
-        }
-
-        is GearListState.Error -> {
-        }
-
-        is GearListState.Result -> {
-            val gears = gearList.gearList
-
-            if (!gears.isEmpty()) {
-                gears.forEach { gear ->
-                    if (gear.parent == -1){
+    LaunchedEffect(gearList) {
+        if (gearList is GearListState.Result) {
+            gearList.gearList.forEach { gear ->
+                if (gear.parent == -1) {
+                    if (!selectedMap.containsKey(gear.id)) {
                         selectedMap[gear.id] = false
+                    }
+                    if (!piecesMap.containsKey(gear.id)) {
                         piecesMap[gear.id] = "1"
                     }
                 }
@@ -136,8 +137,11 @@ fun TemplateCreateDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 GearSelector(
+                    gearViewModel = gearViewModel,
                     selectedMap = selectedMap,
                     piecesMap = piecesMap,
+                    categoryViewModel = categoryViewModel,
+                    locationViewModel = locationViewModel,
                 )
             }
         },
