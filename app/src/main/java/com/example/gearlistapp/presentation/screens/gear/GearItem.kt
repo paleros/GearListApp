@@ -39,7 +39,6 @@ import com.example.gearlistapp.data.entities.CategoryEntity
 import com.example.gearlistapp.data.entities.GearEntity
 import com.example.gearlistapp.data.entities.LocationEntity
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
-import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 import com.example.gearlistapp.ui.model.asCategory
 import com.example.gearlistapp.ui.model.asLocation

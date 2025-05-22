@@ -29,7 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gearlistapp.data.entities.LocationEntity
-import com.example.gearlistapp.presentation.screens.gear.stringToImageVector
 import com.example.gearlistapp.ui.common.DeleteConfirmationDialog
 
 /**

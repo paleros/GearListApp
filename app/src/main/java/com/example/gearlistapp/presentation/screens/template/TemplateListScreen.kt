@@ -1,6 +1,5 @@
 package com.example.gearlistapp.presentation.screens.template
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -27,7 +26,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gearlistapp.R
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
 import com.example.gearlistapp.ui.model.toUiText
@@ -69,8 +67,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.navigation.NavHostController
-import com.example.gearlistapp.data.model.Template
-import com.example.gearlistapp.navigation.Screen
 import com.example.gearlistapp.presentation.dialogs.template.TemplateDetailDialog
 import com.example.gearlistapp.presentation.dialogs.template.TemplateFilterDialog
 import kotlinx.coroutines.Deferred

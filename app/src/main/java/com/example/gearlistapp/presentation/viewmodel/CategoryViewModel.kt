@@ -154,19 +154,4 @@ class CategoryViewModel(
             onResult(color.toString().toInt())
         }
     }
-
-    /**
-     * Egy kategoria id-je
-     * @param onResult a kategoria id-je
-     */
-    fun getFirstId(onResult: (String) -> Unit){
-        viewModelScope.launch {
-            val state = _state.value
-            val id = when (state) {
-                is CategoryListState.Result -> state.categoryList.minByOrNull { it.id }?.id
-                else -> null
-            }
-            onResult(id.toString())
-        }
-    }
 }

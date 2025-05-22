@@ -1,21 +1,15 @@
 package com.example.gearlistapp
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.documentfile.provider.DocumentFile
 import com.example.gearlistapp.presentation.dialogs.exportimport.MyExporter
-import com.example.gearlistapp.presentation.dialogs.exportimport.MyImporter
 import com.example.gearlistapp.presentation.screens.MainScreen
 import com.example.gearlistapp.ui.theme.GearListAppTheme
 
