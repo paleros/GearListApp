@@ -76,4 +76,10 @@
     <string name="export_successful">Export successful!</string>
     <string name="failed_to_open_file">Failed to open file</string>
     <string name="failed_to_create_file">Failed to create file</string>
+    <string name="import_database">Import database</string>
+    <string name="select_a_database_file">Select a database file!</string>
+    <string name="import_">Import</string>
+    <string name="import_failed">Import failed!</string>
+    <string name="import_successful">Import successful!</string>
+    <string name="import_overwrites_data_are_you_sure">Import overwrites data.\nAre you sure?</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.gearlistapp.presentation.screens
 
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -27,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +40,7 @@ import com.example.gearlistapp.navigation.NavGraph
 import com.example.gearlistapp.presentation.dialogs.AboutDialog
 import com.example.gearlistapp.presentation.dialogs.category.CategoryListDialog
 import com.example.gearlistapp.presentation.dialogs.exportimport.ExportDialog
+import com.example.gearlistapp.presentation.dialogs.exportimport.ImportDialog
 import com.example.gearlistapp.presentation.dialogs.location.LocationListDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.GearViewModel
@@ -52,7 +55,9 @@ import kotlinx.coroutines.launch
  * @param exportLauncher Az ActivityResultLauncher, amely kezeli az exportalast.
  */
 @Composable
-fun MainScreen(exportLauncher: ActivityResultLauncher<Intent>) {
+fun MainScreen(
+    exportLauncher: ActivityResultLauncher<Intent>,
+) {
 
     val gearViewModel: GearViewModel = viewModel(factory = GearViewModel.Factory)
     val categoryViewModel: CategoryViewModel = viewModel(factory = CategoryViewModel.Factory)
@@ -166,13 +171,15 @@ fun DrawerContent(
         )
     }
     if (showExportDialog) {
-        //ExportDialog(
-        //    onDismiss = { showExportDialog = false },
-        //    exportLauncher = exportLauncher
-        //)
+        ExportDialog(
+            onDismiss = { showExportDialog = false },
+            exportLauncher = exportLauncher
+        )
     }
     if (showImportDialog) {
-        //ImportDialog(onDismiss = { showImportDialog = false }) TODO import
+        ImportDialog(
+            onDismiss = { showImportDialog = false },
+        )
     }
     if (showAboutDialog) {
         AboutDialog(onDismiss = { showAboutDialog = false })

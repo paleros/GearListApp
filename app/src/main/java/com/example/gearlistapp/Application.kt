@@ -12,7 +12,7 @@ import com.example.gearlistapp.data.repository.TemplateRepository
  * Az alkalmazás fo osztalya,
  * amely az alkalmazas indulasakor hozza letre az adatbazist es a repository-kat.
  */
-class GearApplication : Application() {
+class GearListApplication : Application() {
 
     companion object {
         private lateinit var db: AppDatabase

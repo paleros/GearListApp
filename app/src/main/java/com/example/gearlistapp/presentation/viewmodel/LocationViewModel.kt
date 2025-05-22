@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.gearlistapp.GearApplication.Companion.locationRepository
+import com.example.gearlistapp.GearListApplication.Companion.locationRepository
 import com.example.gearlistapp.domain.usecases.location.LocationUseCases
 import com.example.gearlistapp.ui.model.LocationUi
 import com.example.gearlistapp.ui.model.asLocation

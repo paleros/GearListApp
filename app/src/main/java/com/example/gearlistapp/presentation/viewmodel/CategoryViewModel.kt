@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.gearlistapp.GearApplication.Companion.categoryRepository
+import com.example.gearlistapp.GearListApplication.Companion.categoryRepository
 import com.example.gearlistapp.domain.usecases.category.CategoryUseCases
 import com.example.gearlistapp.ui.model.CategoryUi
 import com.example.gearlistapp.ui.model.asCategory

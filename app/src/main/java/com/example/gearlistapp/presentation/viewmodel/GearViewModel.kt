@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.gearlistapp.GearApplication.Companion.gearRepository
+import com.example.gearlistapp.GearListApplication.Companion.gearRepository
 import com.example.gearlistapp.data.model.Gear
 import com.example.gearlistapp.ui.model.GearUi
 import com.example.gearlistapp.domain.usecases.gear.GearUseCases
