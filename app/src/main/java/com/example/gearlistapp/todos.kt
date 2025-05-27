@@ -1,9 +1,8 @@
 package com.example.gearlistapp
 
-//A következő feladatok listája
+//A következő feladatok és ötletek listája
 
 //TODO ertesites
-//TODO toast
 //TODO mi tortenik, ha toroljuk az egyik felszereles kategoriajat
 //TODO log warningok
 //TODO kapt->kts

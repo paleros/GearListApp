@@ -9,8 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
-import com.example.gearlistapp.presentation.dialogs.exportimport.MyExporter
-import com.example.gearlistapp.presentation.screens.MainScreen
+import com.example.gearlistapp.presentation.dialog.exportimport.MyExporter
+import com.example.gearlistapp.presentation.screen.MainScreen
 import com.example.gearlistapp.ui.theme.GearListAppTheme
 
 /**

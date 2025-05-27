@@ -43,8 +43,8 @@
     <string name="about_created_by">Created by Erős Pál\nContact: pal.eros@edu.bme.hu\n\nDeveloped as part of the\nBudapest University of Technology and Economics\nFaculty of Electrical Engineering and Informatics\nComputer Engineering, M.Sc.\nMobile Software Platforms\ncourse.</string>
     <string name="use">Use</string>
     <string name="delete_filters">Delete filters</string>
-    <string name="searching">Searching...</string>
-    <string name="search">Search...</string>
+    <string name="searching">Searching…</string>
+    <string name="search">Search…</string>
     <string name="edit_gear">Edit gear</string>
     <string name="day">day</string>
     <string name="text_empty_template_list">Template list is empty.</string>
@@ -82,4 +82,8 @@
     <string name="import_failed">Import failed!</string>
     <string name="import_successful">Import successful!</string>
     <string name="import_overwrites_data_are_you_sure">Import overwrites data.\nAre you sure?</string>
+    <string name="save_successful">Save successful</string>
+    <string name="list_deleted">List deleted</string>
+    <string name="edit_successful">Edit successful</string>
+    <string name="delete_successful">Delete successful</string>
 </resources>

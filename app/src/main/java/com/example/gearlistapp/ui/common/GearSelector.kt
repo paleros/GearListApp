@@ -45,7 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.text.input.KeyboardType
-import com.example.gearlistapp.presentation.dialogs.CategoryFilterDialog
+import com.example.gearlistapp.presentation.dialog.CategoryFilterDialog
 import com.example.gearlistapp.presentation.viewmodel.CategoryViewModel
 import com.example.gearlistapp.presentation.viewmodel.LocationViewModel
 
